@@ -49,7 +49,9 @@ function multi_carros_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'menu-1' => esc_html__( 'Primary', 'multi-carros' ),
+			'primary-menu' => esc_html__( 'Primary', 'multi-carros' ),
+			'footer-menu' => esc_html__( 'Secondary', 'multi-carros' ),
+			'footer-menu-quick-links' => esc_html__( 'Tertiary', 'multi-carros' ),
 		)
 	);
 
@@ -138,6 +140,7 @@ add_action( 'widgets_init', 'multi_carros_widgets_init' );
  * Enqueue scripts and styles.
  */
 function multi_carros_scripts() {
+	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
 	wp_enqueue_style( 'bootstrap',get_template_directory_uri(). '/assets/css/bootstrap.min.css', array(),'4.6.0');
 	wp_enqueue_style( 'themify-icons',get_template_directory_uri(). '/assets/fonts/themify-icons/themify-icons.css', array(),MULTI_CARROS_VERSION);
 	wp_enqueue_style( 'flaticon',get_template_directory_uri(). '/assets/fonts/flaticon/flaticon.css', array(),MULTI_CARROS_VERSION);
@@ -148,7 +151,6 @@ function multi_carros_scripts() {
 	wp_enqueue_style( 'animate',get_template_directory_uri(). '/assets/css/animate.css', array(),MULTI_CARROS_VERSION);
 	wp_enqueue_style( 'default',get_template_directory_uri(). '/assets/css/default.css', array(),MULTI_CARROS_VERSION);
 	wp_enqueue_style( 'style-fioxen',get_template_directory_uri(). '/assets/css/style.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
 	wp_style_add_data( 'multi-carros-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'multi-carros-navigation', get_template_directory_uri() . '/js/navigation.js', array(), MULTI_CARROS_VERSION, true );
