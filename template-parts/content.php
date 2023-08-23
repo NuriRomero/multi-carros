@@ -23,7 +23,6 @@
 			<div class="entry-meta">
 				<?php
 				multi_carros_posted_on();
-				
 				multi_carros_posted_by();
 				?>
 			</div><!-- .entry-meta -->
