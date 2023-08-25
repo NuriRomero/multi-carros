@@ -212,3 +212,8 @@ if ( defined( 'JETPACK__VERSION' ) ) {
 if ( class_exists( 'WooCommerce' ) ) {
 	require get_template_directory() . '/inc/woocommerce.php';
 }
+
+/**
+ * Load custom queries.
+ */
+require_once get_template_directory() . '/inc/queries.php';
