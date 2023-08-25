@@ -11,10 +11,13 @@ if( ! function_exists( 'get_cars' ) ) {
      */
     function get_cars( $posts_per_page = 6 ) {
 
+        // WP_Query arguments
         $args = array(
-            'post_type' => 'cars',
-            'posts_per_page' => $posts_per_page,
+            'post_type'              => array( 'cars' ),
+            'posts_per_page'         =>  $posts_per_page,
         );
+
+        // The Query
         $cars = new WP_Query( $args );
 
         return $cars;
