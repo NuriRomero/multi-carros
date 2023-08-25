@@ -173,6 +173,10 @@ function multi_carros_scripts() {
 		wp_enqueue_script( 'comment-reply' );
 	}
 }
+
+
+
+
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
 
 /**
