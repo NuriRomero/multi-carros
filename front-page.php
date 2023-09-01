@@ -22,11 +22,12 @@ get_header();
 
             while( have_posts(  ) ):
                 
+                the_content( );
                 the_post(  );
-    
                 get_template_part( 'template-parts/front-page/section', 'hero' );
                 get_template_part( 'template-parts/front-page/section', 'category' );
                 get_template_part( 'template-parts/front-page/cars', 'listing' );
+                get_template_part( 'template-parts/front-page/cars', 'features' );
 
             endwhile;
         endif;

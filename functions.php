@@ -19,6 +19,7 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
  * runs before the init hook. The init hook is too late for some features, such
  * as indicating support for post thumbnails.
  */
+
 function multi_carros_setup() {
 	/*
 		* Make theme available for translation.
@@ -135,6 +136,80 @@ function multi_carros_widgets_init() {
 	);
 }
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
+
+//Filter by category
+function custom_category_filter($query) {
+    if (is_admin() || !is_main_query()) {
+        return;
+    }
+
+    if (isset($_GET['category']) && is_array($_GET['category'])) {
+        $query->set('category__in', $_GET['category']);
+    }
+}
+add_action('pre_get_posts', 'custom_category_filter');
+// Función para manejar el formulario
+function submit_car_listing_handler() {
+    if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
+        $post_title = sanitize_text_field($_POST['marca'] . ' ' . $_POST['modelo']);
+        $post_content = wp_kses_post($_POST['descripcion']);
+
+        // Asegurarse de registrar el tipo de post personalizado "cars" previamente
+
+        $transmision = isset($_POST['transmision']) ? implode(', ', $_POST['transmision']) : '';
+
+        $new_post = array(
+            'post_title'   => $post_title,
+            'post_content' => $post_content,
+            'post_status'  => 'publish',
+            'post_type'    => 'cars' // Establecer el tipo de post personalizado "cars"
+        );
+
+        // Insertar el nuevo post personalizado "cars"
+        $post_id = wp_insert_post($new_post);
+
+        if ($post_id) {
+            // Agregar metadatos personalizados para el post
+            update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
+            update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
+            update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
+            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['ano_modelo']));
+            update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
+            update_post_meta($post_id, 'transmision', $transmision);
+            update_post_meta($post_id, 'precio', floatval($_POST['precio']));
+
+            // Subir y adjuntar la imagen al post
+            if ($_FILES['imagen']['tmp_name']) {
+                $upload = wp_upload_bits($_FILES['imagen']['name'], null, file_get_contents($_FILES['imagen']['tmp_name']));
+                if (isset($upload['error']) && $upload['error'] != 0) {
+                    echo "Hubo un error al subir la imagen.";
+                } else {
+                    $image_path = $upload['file'];
+                    $file_type = wp_check_filetype(basename($image_path), null);
+                    $attachment = array(
+                        'post_mime_type' => $file_type['type'],
+                        'post_title' => $post_title,
+                        'post_content' => '',
+                        'post_status' => 'inherit'
+                    );
+                    $attachment_id = wp_insert_attachment($attachment, $image_path, $post_id);
+                    require_once(ABSPATH . 'wp-admin/includes/image.php');
+                    $attachment_data = wp_generate_attachment_metadata($attachment_id, $image_path);
+                    wp_update_attachment_metadata($attachment_id, $attachment_data);
+                    set_post_thumbnail($post_id, $attachment_id);
+                }
+            }
+
+            echo "¡El post de tipo 'cars' se creó exitosamente! Puedes verlo <a href='" . get_permalink($post_id) . "'>aquí</a>.";
+        } else {
+            echo "Hubo un error al crear el post.";
+        }
+    }
+}
+
+// Registra la acción para manejar el formulario
+add_action('admin_post_submit_car_listing', 'submit_car_listing_handler');
+add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler');
 
 /**
  * Enqueue scripts and styles.
