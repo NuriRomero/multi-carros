@@ -162,18 +162,18 @@ function submit_car_listing_handler() {
             'post_title'   => $post_title,
             'post_content' => $post_content,
             'post_status'  => 'publish',
-            'post_type'    => 'cars' // Establecer el tipo de post personalizado "cars"
+            'post_type'    => 'cars' // cars
         );
 
-        // Insertar el nuevo post personalizado "cars"
+        // new post
         $post_id = wp_insert_post($new_post);
 
         if ($post_id) {
-            // Agregar metadatos personalizados para el post
+            // metadata
             update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
             update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
             update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['ano_modelo']));
+            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['anio_modelo']));
             update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
             update_post_meta($post_id, 'transmision', $transmision);
             update_post_meta($post_id, 'precio', floatval($_POST['precio']));
