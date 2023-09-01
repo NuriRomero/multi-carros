@@ -148,37 +148,39 @@ function custom_category_filter($query) {
     }
 }
 add_action('pre_get_posts', 'custom_category_filter');
-// Función para manejar el formulario
+// Form
 function submit_car_listing_handler() {
     if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
         $post_title = sanitize_text_field($_POST['marca'] . ' ' . $_POST['modelo']);
         $post_content = wp_kses_post($_POST['descripcion']);
 
-        // Asegurarse de registrar el tipo de post personalizado "cars" previamente
+
 
         $transmision = isset($_POST['transmision']) ? implode(', ', $_POST['transmision']) : '';
+        $estado = isset($_POST['estado']) ? implode(', ', $_POST['estado']) : '';
 
         $new_post = array(
             'post_title'   => $post_title,
             'post_content' => $post_content,
             'post_status'  => 'publish',
-            'post_type'    => 'cars' // Establecer el tipo de post personalizado "cars"
+            'post_type'    => 'cars'
         );
 
-        // Insertar el nuevo post personalizado "cars"
+   //insert new post
         $post_id = wp_insert_post($new_post);
 
         if ($post_id) {
-            // Agregar metadatos personalizados para el post
-            update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
-            update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
-            update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['ano_modelo']));
-            update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
-            update_post_meta($post_id, 'transmision', $transmision);
-            update_post_meta($post_id, 'precio', floatval($_POST['precio']));
 
-            // Subir y adjuntar la imagen al post
+            update_post_meta($post_id, 'Marca', sanitize_text_field($_POST['marca']));
+            update_post_meta($post_id, 'Modelo', sanitize_text_field($_POST['modelo']));
+            update_post_meta($post_id, 'Color', sanitize_text_field($_POST['color']));
+            update_post_meta($post_id, 'Año', sanitize_text_field($_POST['anio_modelo']));
+            update_post_meta($post_id, 'Ciudad', sanitize_text_field($_POST['ciudad']));
+            update_post_meta($post_id, 'Transmision', $transmision);
+            update_post_meta($post_id, 'Estado', $estado);
+            update_post_meta($post_id, 'Precio', floatval($_POST['precio']));
+
+            // Upload image
             if ($_FILES['imagen']['tmp_name']) {
                 $upload = wp_upload_bits($_FILES['imagen']['name'], null, file_get_contents($_FILES['imagen']['tmp_name']));
                 if (isset($upload['error']) && $upload['error'] != 0) {
@@ -207,7 +209,7 @@ function submit_car_listing_handler() {
     }
 }
 
-// Registra la acción para manejar el formulario
+// handle form
 add_action('admin_post_submit_car_listing', 'submit_car_listing_handler');
 add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler');
 

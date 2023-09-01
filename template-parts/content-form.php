@@ -45,7 +45,7 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form_group">
-                                    <input type="text" class="form_control" placeholder="Año Modelo" name="ano_modelo" required>
+                                    <input type="text" class="form_control" placeholder="Año Modelo" name="anio_modelo" required>
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -66,6 +66,20 @@
                                     </div>
                                     </div>
                                 </div>
+                            <div class="col-lg-6">
+                                <div class="form_group">
+                                    <p>Estado:</p>
+                                    <div class="single-checkbox d-flex">
+                                        <input type="checkbox" id="usado" name="estado[]" value="usado">
+                                        <label for="manual"><span>Usado </span></label>
+
+                                    <div class="single-checkbox d-flex">
+                                        <input type="checkbox" id="nuevo" name="estado[]" value="nuevo">
+                                        <label for="automatico"><span>Nuevo</span></label>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form_group">
