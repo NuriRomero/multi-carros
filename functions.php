@@ -137,17 +137,6 @@ function multi_carros_widgets_init() {
 }
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
 
-//Filter by category
-function custom_category_filter($query) {
-    if (is_admin() || !is_main_query()) {
-        return;
-    }
-
-    if (isset($_GET['category']) && is_array($_GET['category'])) {
-        $query->set('category__in', $_GET['category']);
-    }
-}
-add_action('pre_get_posts', 'custom_category_filter');
 // Función para manejar el formulario
 function submit_car_listing_handler() {
     if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
@@ -173,7 +162,7 @@ function submit_car_listing_handler() {
             update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
             update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
             update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['anio_modelo']));
+            update_post_meta($post_id, 'anio_modelo', sanitize_text_field($_POST['anio_modelo']));
             update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
             update_post_meta($post_id, 'transmision', $transmision);
             update_post_meta($post_id, 'precio', floatval($_POST['precio']));
@@ -215,6 +204,7 @@ add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler')
  * Enqueue scripts and styles.
  */
 function multi_carros_scripts() {
+
 	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
 	wp_enqueue_style( 'bootstrap',get_template_directory_uri(). '/assets/css/bootstrap.min.css', array(),'4.6.0');
 	wp_enqueue_style( 'themify-icons',get_template_directory_uri(). '/assets/fonts/themify-icons/themify-icons.css', array(),MULTI_CARROS_VERSION);
@@ -247,11 +237,10 @@ function multi_carros_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+	wp_localize_script( 'main-fioxen','cars',array(
+		'ajaxurl' => admin_url( 'admin-ajax.php' ),
+	) );
 }
-
-
-
-
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
 
 /**
@@ -259,6 +248,7 @@ add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
  */
 require get_template_directory() . '/inc/custom-header.php';
 
+require get_template_directory() . '/inc/cars-filters.php';
 /**
  * Custom template tags for this theme.
  */

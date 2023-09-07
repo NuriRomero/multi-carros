@@ -26,19 +26,68 @@ get_header();
                                         <i class="ti-search"></i>
                                     </div>
                                     <div class="form_group cars-categories">
-                                        <select class="wide">
-                                            <option data-dsplay="Todas las categorias">Todas las categorias</option>
+                                        <!-- brand selector  -->
+                                        <select class="wide" id="cars-brand-selector">
+                                            <option data-display="Todas las marcas">Todas las marcas</option>
                                             <?php
                                             $args = array(
                                                 'orderby' => 'name',
                                                 'order' => 'ASC',
                                                 'hide_empty' => true,
                                             );
-                                            $cars_categories = get_terms('category', $args);
-                                            foreach ($cars_categories as $item_category) {
-                                                echo '<option value="'.$item_category->slug.'">'.$item_category->name.'</option>';
+                                            $cars_brand = get_terms('brand', $args);
+                                            foreach ($cars_brand as $item_brand) {
+                                                echo '<option value="'.$item_brand->slug.'">'.$item_brand->name.'</option>';
                                             }
-                                            ?>
+                                            
+                                            ?>       
+                                        </select>
+                                        
+                                        <!-- fuel selector  -->
+                                        <select class="wide" id="cars-fuel-selector">
+                                            <option data-dsplay="Todas los tipos de combustibles">Todos los tipos de combustible</option>
+                                            <?php
+                                            $args = array(
+                                                'orderby' => 'name',
+                                                'order' => 'ASC',
+                                                'hide_empty' => true,
+                                            );
+                                            $cars_fuel = get_terms('fuel', $args);
+                                            foreach ($cars_fuel as $item_fuel) {
+                                                echo '<option value="'.$item_fuel->slug.'">'.$item_fuel->name.'</option>';
+                                            }
+                                            ?>       
+                                        </select>
+                                       
+                                        <!-- condition selector  -->
+                                        <select class="wide" id="cars-condition-selector">
+                                            <option data-dsplay="Todos las condiciones de autos">Todas las condiciones de autos</option>
+                                            <?php
+                                            $args = array(
+                                                'orderby' => 'name',
+                                                'order' => 'ASC',
+                                                'hide_empty' => true,
+                                            );
+                                            $cars_condition = get_terms('condition', $args);
+                                            foreach ($cars_condition as $item_condition) {
+                                                echo '<option value="'.$item_condition->slug.'">'.$item_condition->name.'</option>';
+                                            }
+                                            ?>       
+                                        </select>
+                                          <!-- type_car selector  -->
+                                          <select class="wide" id="cars-type_car-selector">
+                                            <option data-dsplay="Todos los estados">Todas los tipos de auto</option>
+                                            <?php
+                                            $args = array(
+                                                'orderby' => 'name',
+                                                'order' => 'ASC',
+                                                'hide_empty' => true,
+                                            );
+                                            $cars_types = get_terms('type_car', $args);
+                                            foreach ($cars_types as $item_type_car) {
+                                                echo '<option value="'.$item_type_car->slug.'">'.$item_type_car->name.'</option>';
+                                            }
+                                            ?>       
                                         </select>
                                     </div>
                                 </div>
@@ -76,7 +125,7 @@ get_header();
                             </div>
                         </div>
                     </div>
-                    <div class="listing-grid-wrapper">
+                    <div class="listing-grid-wrapper" id="listing-cars">
                         <?php
                         if(have_posts()):
                             while (have_posts()):

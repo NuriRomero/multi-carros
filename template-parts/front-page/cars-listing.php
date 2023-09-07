@@ -34,9 +34,10 @@ if( $cars->have_posts() ):
                         <h3 class="title">
                             <a href="<?php the_permalink(); ?>">
                                 <?php
+                            $marca = get_post_meta(get_the_ID(),'Marca',true);
                             $modelo = get_post_meta(get_the_ID(),'Modelo',true);
                             $anio = get_post_meta(get_the_ID(),'Año',true);
-                            echo $modelo . ' ' . $anio;
+                            echo $marca.' '.$modelo . ' ' . $anio;
                             ?>
                             </a>
                         </h3>
