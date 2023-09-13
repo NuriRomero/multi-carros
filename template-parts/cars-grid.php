@@ -2,7 +2,7 @@
 
 ?>
 
-<div class="col-md-6 col-sm-12">
+<div class="col-12">
     <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
         <div class="listing-thumbnail">
             <?php the_post_thumbnail(); ?>
@@ -15,7 +15,6 @@
                     <li><span><i class="ti-location-pin"></i>
                             <?php echo get_post_meta(get_the_ID(),'Ciudad',true); ?></span></li>
                     <li><span><i class="ti-heart"></i><a href="#">Guardar</a></span></li>
-
                 </ul>
             </div>
             <span class="price" style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
