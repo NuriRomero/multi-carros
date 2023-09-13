@@ -19,11 +19,11 @@ get_header();
                     <!-- Sidebar Content -->
                     <div class="sidebar-widget-area">
                         <div class="widget search-listing-widget mb-30 wow fadeInUp">
-                            <h4 class="widget-title">Filter Search</h4>
+                            <h4 class="widget-title">Filtrar Busqueda</h4>
                             <form>
                                 <div class="search-form">
                                     <div class="form_group">
-                                        <input type="search" class="form_control" placeholder="Search keyword"
+                                        <input type="search" class="form_control" placeholder="Buscar por palabra clave"
                                             name="search" required>
                                         <i class="ti-search"></i>
                                     </div>

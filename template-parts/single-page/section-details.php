@@ -131,34 +131,41 @@
                         </div>
                     </div>
                     <?php
-                        // Obtener el ID de la entrada actual
-                        $post_id = get_the_ID();
+                    $post_id = get_the_ID();
 
-                        // Obtener los valores del campo personalizado 'Multiples fotos'
-                        $multiples_fotos = get_post_meta($post_id, 'main_information_metabox_multiples_fotos', false);
+                    $imagen_destacada_id = get_post_thumbnail_id($post_id);
+                    $imagen_destacada_url = wp_get_attachment_image_url($imagen_destacada_id, 'full');
 
-                        if (!empty($multiples_fotos)) {
-                            echo '<div class="listing-gallery-box wow fadeInUp">';
-                            echo '<h4 class="title">Galeria de fotos</h4>';
-                            echo '<div class="row">';
+                    $imagenes_galeria = get_post_gallery_images($post_id);
 
-                            foreach ($multiples_fotos as $imagen) {
-                                echo '<div class="col-md-6 col-sm-12">';
-                                echo '<div class="gallery-item mb-30">';
-                                echo '<a href="' . esc_url($imagen) . '" class="img-popup"><img src="' . esc_url($imagen) . '" alt="gallery image"></a>';
-                                echo '</div>';
-                                var_dump($multiples_fotos); // Imprimirá el contenido de $multiples_fotos
+                    if (!empty($imagen_destacada_url)) {
+                        echo '<div class="listing-gallery-box wow fadeInUp">';
+                        echo '<h4 class="title">Galeria de fotos</h4>';
+                        echo '<div class="row">';
+                        echo '<div class="col-md-6 col-sm-12">';
+                        echo '<div class="gallery-item mb-30">';
+                        echo '<a href="' . esc_url($imagen_destacada_url) . '" class="img-popup"><img src="' . esc_url($imagen_destacada_url) . '" alt="gallery image"></a>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                    } else {
+                        echo 'No hay imagen destacada disponible.';
+                    }
 
-                                echo '</div>';
-                            }
-
+                    // Verificar si hay imágenes en la galería y mostrarlas
+                    if (!empty($imagenes_galeria)) {
+                        foreach ($imagenes_galeria as $imagen) {
+                            echo '<div class="col-md-6 col-sm-12">';
+                            echo '<div class="gallery-item mb-30">';
+                            echo '<a href="' . esc_url($imagen) . '" class="img-popup"><img src="' . esc_url($imagen) . '" alt="gallery image"></a>';
                             echo '</div>';
                             echo '</div>';
-                        } else {
-                            echo 'No hay imágenes disponibles.';
                         }
+                    } else {
+                        echo 'No hay imágenes de la galería disponibles.';
+                    }
                     ?>
-
                     <!-- PREGUNTA -->
                     <div class="listing-review-form mb-30 wow fadeInUp">
                         <div class="row">

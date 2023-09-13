@@ -46,7 +46,7 @@ if( $cars->have_posts() ):
                                 <li><span><i
                                             class="ti-location-pin"></i><?php echo get_post_meta(get_the_ID(),'Ciudad',true); ?></span>
                                 </li>
-                                <li><span><i class="ti-heart"></i><a href="#">Guardar</a></span></li>
+                               
                             </ul>
                         </div>
                         <span class="price">Precio: <?php echo get_post_meta(get_the_ID(),'Precio',true); ?></span>
