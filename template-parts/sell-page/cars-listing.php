@@ -42,13 +42,12 @@ if( $cars->have_posts() ):
                                 </h3>
                                 <div class="listing-meta">
                                     <ul>
-                                        <li><span><i
-                                                    class="ti-location-pin"></i><?php echo get_post_meta(get_the_ID(),'Ciudad',true); ?></span>
+                                        <li><span><i class="ti-location-pin"></i><?php echo get_post_meta(get_the_ID(),'main_information_metabox_ciudad',true); ?></span>
                                         </li>
                                         
                                     </ul>
                                 </div>
-                                <span class="price">Precio: <?php echo get_post_meta(get_the_ID(),'Precio',true); ?></span>
+                                <span class="price">Precio: <?php echo get_post_meta(get_the_ID(),'main_information_metabox_precio',true); ?></span>
                             </div>
                             <div class="listing-meta">
 
