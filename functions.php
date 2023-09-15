@@ -139,6 +139,53 @@ function multi_carros_widgets_init() {
 }
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
 
+// Función para manejar el campo ciudad
+function mi_funcion_personalizada_despues_de_guardar($post_id, $cmb2, $updated_data) {
+    // Verifica si los campos personalizados del grupo de campos 'cmb_field_map' se guardaron o actualizaron
+    if ($cmb2->has_group('cmb_field_map')) {
+        // Obtiene los valores de los campos personalizados 'cmb_field_map'
+        $latitude = $cmb2->get_value('latitude', 'cmb_field_map');
+        $longitude = $cmb2->get_value('longitude', 'cmb_field_map');
+
+        // Llama a la API de geocodificación inversa para obtener el nombre de la ciudad
+        $api_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&key=AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs";
+
+        $response = wp_remote_get($api_url);
+
+        if (!is_wp_error($response)) {
+            $body = wp_remote_retrieve_body($response);
+            $data = json_decode($body);
+
+            // Verifica si la respuesta tiene resultados
+            if ($data && isset($data->results[0]) && isset($data->results[0]->address_components)) {
+                foreach ($data->results[0]->address_components as $component) {
+                    if (in_array('locality', $component->types)) {
+                        // Obtiene el nombre de la ciudad
+                        $city_name = $component->long_name;
+                        break;
+                    }
+                }
+
+                if (!empty($city_name)) {
+                    // Actualiza un campo personalizado con el nombre de la ciudad
+                    update_post_meta($post_id, 'nombre_ciudad', $city_name);
+                } else {
+                    echo 'Ciudad no encontrada';
+                }
+            } else {
+                echo 'No se encontraron resultados de geocodificación';
+            }
+        } else {
+            echo 'Error al llamar a la API de geocodificación';
+        }
+    }
+}
+
+add_action('cmb2_save_post_fields', 'mi_funcion_personalizada_despues_de_guardar', 10, 3);
+
+
+
+
 // Función para manejar el formulario
 function submit_car_listing_handler() {
     if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
