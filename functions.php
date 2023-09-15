@@ -21,6 +21,8 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
  */
 
 function multi_carros_setup() {
+
+	add_image_size( 'car_size_photo', 770, 500, true);
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.

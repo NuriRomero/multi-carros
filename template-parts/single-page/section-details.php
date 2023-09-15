@@ -1,3 +1,16 @@
+
+<?php
+/**
+* Template part for displaying page content in page.php
+*
+* @link https://developer.wordpress.org/themes/basics/template-hierarchy/
+*
+* @package Multi_Carros
+*/
+printf( '<pre>%s</pre>', var_export( get_post_custom( get_the_ID(  ) ), true ) );
+?>
+
+
 <!--====== Start Listing Details section ======-->
 <section class="listing-details-section pt-120 pb-90">
     <div class="container">
@@ -6,25 +19,13 @@
                 <div class="listing-details-wrapper listing-details-wrapper-one">
                     <div class="listing-content mb-50 wow fadeInUp">
                         <h2 class="title"><?php
-                            $modelo = get_post_meta(get_the_ID(), 'main_information_metabox_modelo', true);
-                            $anio = get_post_meta(get_the_ID(),'main_information_metabox_año_modelo',true);
-                            $precio = get_post_meta(get_the_ID(),'main_information_metabox_año_precio',true);
-                            $post_id = get_the_ID();
-                            // Obtener los términos seleccionados en la taxonomía 'brand' para esta entrada
-                            $terms = wp_get_post_terms($post_id, 'brand');
-                            // Verificar si se encontraron términos y mostrarlos si existen
-                            if (!empty($terms)) {
-                                
-                                foreach ($terms as $term) {
-                                    echo esc_html($term->name) . ' '.$modelo.' '. $anio;
-                                }
-                            } else {
-                                echo 'Marca no especificada';
-                            }
+                            the_title();
                             ?>
                         </h2>
                         <br>
-                        <?php the_post_thumbnail();?>
+                        <?php the_post_thumbnail( 'car_size_photo', array(
+                            'class' => 'img-fluid img-popup',
+                        ) );?>
                         <br>
                         </br>
                         <p style="font-weight: bold; font-size: 24px;"><?php echo get_post_meta(get_the_ID(),'main_information_metabox_descripcion',true);?></p>
@@ -99,7 +100,7 @@
                                     </div>
                                     <div class="info">
                                         
-                                        <h6>Transmision: <?php // Obtener el ID de la entrada actual
+                                        <h6>Transmision: <?php 
                                         // Obtener el valor del campo personalizado 'Modelo'
                                         echo get_post_meta(get_the_ID(), 'main_information_metabox_transmision', true);
 
@@ -130,43 +131,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
                     <?php
-                    $post_id = get_the_ID();
-
-                    $imagen_destacada_id = get_post_thumbnail_id($post_id);
-                    $imagen_destacada_url = wp_get_attachment_image_url($imagen_destacada_id, 'full');
-
-                    $imagenes_galeria = get_post_gallery_images($post_id);
-
-                    if (!empty($imagen_destacada_url)) {
-                        echo '<div class="listing-gallery-box wow fadeInUp">';
-                        echo '<h4 class="title">Galeria de fotos</h4>';
-                        echo '<div class="row">';
-                        echo '<div class="col-md-6 col-sm-12">';
-                        echo '<div class="gallery-item mb-30">';
-                        echo '<a href="' . esc_url($imagen_destacada_url) . '" class="img-popup"><img src="' . esc_url($imagen_destacada_url) . '" alt="gallery image"></a>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                    } else {
-                        echo 'No hay imagen destacada disponible.';
-                    }
-
-                    // Verificar si hay imágenes en la galería y mostrarlas
-                    if (!empty($imagenes_galeria)) {
-                        foreach ($imagenes_galeria as $imagen) {
-                            echo '<div class="col-md-6 col-sm-12">';
-                            echo '<div class="gallery-item mb-30">';
-                            echo '<a href="' . esc_url($imagen) . '" class="img-popup"><img src="' . esc_url($imagen) . '" alt="gallery image"></a>';
-                            echo '</div>';
-                            echo '</div>';
-                        }
-                    } else {
-                        echo 'No hay imágenes de la galería disponibles.';
+                    $galeria = get_post_meta( get_the_ID(),'main_information_metabox_multiples_fotos' , true );
+                    foreach ($galeria as $id => $imagen) {
+                   
+                    ?>
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="listing-item listing-grid-one mb-45 wow fadeInUp" data-wow-delay="10ms">
+                            <div class="listing-thumbnail">
+                            <?php echo wp_get_attachment_image( $id, 'medium',false, array(
+                                'class' => 'img-fluid img-popup',
+                            ) );
+                                ?>
+                            </div>
+                            <div class="listing-content">
+                            </div>
+                        </div>
+                    </div>
+                
+                    
+                    <?php
+                        # code...
                     }
                     ?>
                     <!-- PREGUNTA -->
+                </div>
                     <div class="listing-review-form mb-30 wow fadeInUp">
                         <div class="row">
                             <div class="col-md-6">
@@ -208,7 +198,10 @@
                     <div class="widget contact-info-widget mb-50 wow fadeInUp">
                         <div class="contact-info-widget-wrap">
                             <div class="contact-map">
-                                <iframe src="https://maps.google.com/maps?q=new%20york&t=&z=13&ie=UTF8&iwloc=&output=embed"></iframe>
+                                <?php $location =  get_post_meta(get_the_ID(),'main_information_metabox_ciudad',true);
+
+                                ?>
+                                <iframe src="https://maps.google.com/maps?q=<?php echo $location['latitude']?>,<?php echo $location['longitude']?>&ie=UTF8&iwloc=&output=embed"></iframe>
                                 <a href="#" class="support-icon"><i class="flaticon-headphone"></i></a>
                             </div>
                         </div>

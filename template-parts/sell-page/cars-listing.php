@@ -27,15 +27,29 @@ if( $cars->have_posts() ):
                         <div class="listing-item listing-grid-one mb-45 wow fadeInUp" dta-wow-delay="10ms">
                             <div class="listing-thumbnail">
                                 <?php the_post_thumbnail();?>
-                                <span class="featured-btn"></i><?php echo get_post_meta(get_the_ID(),'Estado',true); ?></span>
+                                <span class="featured-btn"></i>
+                                <?php $post_id = get_the_ID();
+                                    $terms = wp_get_post_terms($post_id, 'condition');
+                                    // Verificar si se encontraron términos y mostrarlos si existen
+                                    if (!empty($terms)) {
+                                        
+                                        foreach ($terms as $term) {
+                                            echo esc_html($term->name) ;
+                                        }
+                                    } else {
+                                        echo 'Condicion no especificado';
+                                    }
+                                    ?>
+                            
+                                </span>
                                 </li></span>
                             </div>
                             <div class="listing-content">
                                 <h3 class="title">
                                     <a href="<?php the_permalink(); ?>">
                                         <?php
-                                        $modelo = get_post_meta(get_the_ID(),'Modelo',true);
-                                        $anio = get_post_meta(get_the_ID(),'Año',true);
+                                        $modelo = get_post_meta(get_the_ID(),'main_information_metabox_modelo',true);
+                                        $anio = get_post_meta(get_the_ID(),'main_information_metabox_año_modelo',true);
                                         echo $modelo . ' ' . $anio;
                                         ?>
                                     </a>
