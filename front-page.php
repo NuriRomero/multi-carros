@@ -26,8 +26,8 @@ get_header();
                 the_post(  );
                 get_template_part( 'template-parts/front-page/section', 'hero' );
                 get_template_part( 'template-parts/front-page/section', 'category' );
-                get_template_part( 'template-parts/front-page/cars', 'listing' );
                 get_template_part( 'template-parts/front-page/cars', 'features' );
+                get_template_part( 'template-parts/front-page/cars', 'listing' );
 
             endwhile;
         endif;

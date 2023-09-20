@@ -23,6 +23,7 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
 function multi_carros_setup() {
 
 	add_image_size( 'car_size_photo', 770, 500, true);
+	add_image_size( 'galery_carousel', 170, 170, true);
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.
@@ -183,9 +184,77 @@ function mi_funcion_personalizada_despues_de_guardar($post_id, $cmb2, $updated_d
 
 add_action('cmb2_save_post_fields', 'mi_funcion_personalizada_despues_de_guardar', 10, 3);
 
+function obtener_numero_total_autos_nuevos() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'nuevo', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
 
+    // Realizar la consulta de WordPress
+    $autos_nuevos_query = new WP_Query($args);
 
+    // Obtener el número total de autos nuevos
+    $numero_total_autos_nuevos = $autos_nuevos_query->found_posts;
 
+    // Retornar el número total como resultado
+    return $numero_total_autos_nuevos;
+}
+
+function obtener_numero_total_autos_semi_nuevos() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'semi-nuevo', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
+
+    // Realizar la consulta de WordPress
+    $autos_semi_nuevos_query = new WP_Query($args);
+
+    // Obtener el número total de autos nuevos
+    $numero_total_autos_semi_nuevos = $autos_semi_nuevos_query->found_posts;
+
+    // Retornar el número total como resultado
+    return $numero_total_autos_semi_nuevos;
+}
+
+function obtener_numero_total_autos_usados() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'usado', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
+
+    // Realizar la consulta de WordPress
+    $autos_usados_query = new WP_Query($args);
+
+    // Obtener el número total de autos 
+    $numero_total_autos_usados = $autos_usados_query->found_posts;
+
+    // Retornar el número total como resultado
+    return $numero_total_autos_usados;
+}
 // Función para manejar el formulario
 function submit_car_listing_handler() {
     if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {

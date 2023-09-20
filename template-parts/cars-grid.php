@@ -5,8 +5,16 @@
 <div class="col-12">
     <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
         <div class="listing-thumbnail">
-            <?php the_post_thumbnail(); ?>
-            <span class="featured-btn"> <?php echo get_post_meta(get_the_ID(),'Estado',true); ?></span>
+            <?php
+            $image_url = get_the_post_thumbnail_url(get_the_ID(), 'car_size_photo');
+            if ($image_url) {
+                echo '<img src="' . esc_url($image_url) . '" href="' . esc_url($image_url) . '" class="img-fluid img-popup" alt="' . esc_attr(get_the_title()) . '">';
+            } else {
+                echo 'No se ha proporcionado una imagen válida.';
+            }
+            ?>
+            <span class="featured-btn"> <?php echo !empty($terms = wp_get_post_terms(get_the_ID(), 'condition')) ? esc_html($terms[0]->name) : 'Condicion no especificada'; ?>
+        </span>
         </div>
         <div class="listing-content">
             <h3 class="title"><a href="<?php the_permalink();?>"><?php the_title(); ?></a></h3>

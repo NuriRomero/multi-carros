@@ -27,7 +27,7 @@ function filtrar_por_marca()
                 $location_data = get_post_meta(get_the_ID(), 'main_information_metabox_ciudad', true);
                 $post_id = get_the_ID();
                 $terms = wp_get_post_terms($post_id, 'condition');
-                                    // Verificar si se encontraron términos y mostrarlos si existen
+                
                 if (!empty($terms)) {
                                         
                     foreach ($terms as $term) {
@@ -45,7 +45,7 @@ function filtrar_por_marca()
                     // Convierte $city en una cadena de texto antes de imprimir
                     $city_str = is_array($city) ? implode(', ', $city) : $city;
 
-                    // Ahora puedes usar $city_str para mostrar el nombre de la ciudad en tu plantilla
+                  
                     if (!empty($city_str)) {
                         echo 'Ciudad: ' . $city_str;
                     } else {
@@ -162,9 +162,9 @@ function filtrar_por_condicion()
                     'title' => get_the_title(),
                     'permalink' => get_permalink(),
                     'post_thumbnail_url' => get_the_post_thumbnail_url(),
-                    'ciudad' => get_post_meta(get_the_ID(), 'Ciudad', true),
+                    'ciudad' => get_post_meta(get_the_ID(), 'main_information_metabox_ciudad', true),
                     'estado' => get_post_meta(get_the_ID(), 'Estado', true),
-                    'precio' => get_post_meta(get_the_ID(), 'Precio', true),
+                    'precio' => get_post_meta(get_the_ID(), 'main_information_precio', true),
                     
                 );
 

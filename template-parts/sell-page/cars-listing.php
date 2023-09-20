@@ -26,21 +26,16 @@ if( $cars->have_posts() ):
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="listing-item listing-grid-one mb-45 wow fadeInUp" dta-wow-delay="10ms">
                             <div class="listing-thumbnail">
-                                <?php the_post_thumbnail();?>
+                            <?php
+                                $image_url = get_the_post_thumbnail_url(get_the_ID(), 'car_size_photo');
+                                if ($image_url) {
+                                    echo '<img src="' . esc_url($image_url) . '" href="' . esc_url($image_url) . '" class="img-fluid img-popup" alt="' . esc_attr(get_the_title()) . '">';
+                                } else {
+                                    echo 'No se ha proporcionado una imagen válida.';
+                                }
+                                ?>
                                 <span class="featured-btn"></i>
-                                <?php $post_id = get_the_ID();
-                                    $terms = wp_get_post_terms($post_id, 'condition');
-                                    // Verificar si se encontraron términos y mostrarlos si existen
-                                    if (!empty($terms)) {
-                                        
-                                        foreach ($terms as $term) {
-                                            echo esc_html($term->name) ;
-                                        }
-                                    } else {
-                                        echo 'Condicion no especificado';
-                                    }
-                                    ?>
-                            
+                                <?php echo !empty($terms = wp_get_post_terms(get_the_ID(), 'condition')) ? esc_html($terms[0]->name) : 'Condicion no especificada'; ?>
                                 </span>
                                 </li></span>
                             </div>

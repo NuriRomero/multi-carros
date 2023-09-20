@@ -31,36 +31,13 @@
                                     <div class="col-md-4">
                                         
                                             <i class="ti-location-arrow">
-                                                <?php $post_id = get_the_ID();
-                                                    $terms = wp_get_post_terms($post_id, 'condition');
-                                                    //Verificar si se encontraron términos y mostrarlos si existen
-                                                    if (!empty($terms)) {
-                                                                            
-                                                        foreach ($terms as $term) {
-                                                            $condicion = esc_html($term->name) ;
-                                                            echo $condicion;
-                                                        }
-                                                    } else {
-                                                            echo 'Condicion no especificada';
-                                                            }
-                                                ?>
+                                            <?php echo !empty($terms = wp_get_post_terms(get_the_ID(), 'condition')) ? esc_html($terms[0]->name) : 'Condicion no especificada'; ?>
+
                                             </i>
 
                                             <a href="listing-grid.html" class="icon-btn">
                                                <i class="ti-tag">
-                                                <?php $post_id = get_the_ID();
-                                                        $terms = wp_get_post_terms($post_id, 'brand');
-                                                        //Verificar si se encontraron términos y mostrarlos si existen
-                                                        if (!empty($terms)) {
-                                                                                
-                                                            foreach ($terms as $term) {
-                                                                $marca = esc_html($term->name) ;
-                                                                echo $marca;
-                                                            }
-                                                        } else {
-                                                                echo 'Marca no especificada';
-                                                                }
-                                                ?>
+                                               <?php echo !empty($terms = wp_get_post_terms(get_the_ID(), 'brand')) ? esc_html($terms[0]->name) : 'Marca no especificada'; ?>
                                                 </i>
                                             </a>
                                         
@@ -68,28 +45,35 @@
                                 </div>
                             </div>
                             <div class="listing-thumbnail mb-30 wow fadeInUp">
-                                <?php the_post_thumbnail('car_size_photo', array('class'=> 'img-fluid img-popup'));?>
+                            <?php
+                                $image_url = get_the_post_thumbnail_url(get_the_ID(), 'car_size_photo');
+                                if ($image_url) {
+                                    echo '<img src="' . esc_url($image_url) . '" href="' . esc_url($image_url) . '" class="img-fluid img-popup" alt="' . esc_attr(get_the_title()) . '">';
+                                } else {
+                                    echo 'No se ha proporcionado una imagen válida.';
+                                }
+                                ?>
                             </div>
                             <div class="listing-gallery-box mb-30 wow fadeInUp">
-                                <h4 class="title">Photo Gallery</h4>
-                                <div class="gallery-slider-one">
-                                    <div class="gallery-item">
-                                        <img src="assets/images/listing/gallery-5.jpg" alt="gallery image">
-                                    </div>
-                                    <div class="gallery-item">
-                                        <img src="assets/images/listing/gallery-6.jpg" alt="gallery image">
-                                    </div>
-                                    <div class="gallery-item">
-                                        <img src="assets/images/listing/gallery-7.jpg" alt="gallery image">
-                                    </div>
-                                    <div class="gallery-item">
-                                        <img src="assets/images/listing/gallery-8.jpg" alt="gallery image">
-                                    </div>
-                                    <div class="gallery-item">
-                                        <img src="assets/images/listing/gallery-6.jpg" alt="gallery image">
-                                    </div>
-                                </div>
+                            <h4 class="title">Galería de fotos</h4>
+                            <div class="gallery-slider-one">
+                                <?php
+                                $galeria = get_post_meta(get_the_ID(), 'main_information_metabox_multiples_fotos', true);
+                                if (!empty($galeria)) {
+                                    foreach ($galeria as $id => $imagen) {
+                                        if ($imagen) {
+                                            echo '<a href="' . esc_url($imagen) . '" class="gallery-item img-popup">';
+                                            echo wp_get_attachment_image($id, 'galery_carousel', false, array('class' => 'img-fluid'));
+                                            echo '</a>';
+                                        }
+                                    }
+                                } else {
+                                    echo 'No se han proporcionado imágenes válidas.';
+                                }
+                                ?>
                             </div>
+                        </div>
+
                             <div class="listing-content mb-30 wow fadeInUp">
                                 <h3 class="title">Descripcion</h3>
                                 <p> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_descripcion', true); ?></p>
@@ -186,259 +170,72 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="listing-play-box mb-30 wow fadeInUp">
-                                <h4 class="title">Documentary</h4>
-                                <div class="play-content bg_cover text-center" style="background-image: url(assets/images/bg/video-bg-3.jpg);">
-                                    <a href="https://www.youtube.com/watch?v=lJyzByVH1oQ" class="video-popup"><i class="flaticon-play-button"></i></a>
-                                </div>
-                            </div>
-                          
                             <div class="listing-tag-box mb-30 wow fadeInUp">
-                                <h4 class="title">Popular Tag</h4>
-                                <a href="#">Delivery</a>
-                                <a href="#">Restaurant</a>
-                                <a href="#">Free Internet</a>
-                                <a href="#">Shopping</a>
-                                <a href="#">Car Parking</a>
+                                <h4 class="title">Amenidades</h4>
+                                <?php
+                                // Obtén los términos de la taxonomía 'amenidades' asociados a este auto
+                                $amenidades = get_the_terms(get_the_ID(), 'amenidades');
+
+                                if (!empty($amenidades) && !is_wp_error($amenidades)) {
+                                    foreach ($amenidades as $amenidad) {
+                                        echo '<a href="' . esc_url(get_term_link($amenidad)) . '">' . esc_html($amenidad->name) . '</a>';
+                                    }
+                                } else {
+                                    echo '<p>No se encontraron amenidades para este auto.</p>';
+                                }
+                                ?>
                             </div>
-                            <div class="listing-rating-box wow fadeInUp">
-                                <h4 class="title">Average Review (10 Reviews)</h4>
-                                <div class="row">
-                                    <div class="col-lg-6">
-                                        <div class="single-average-rating">
-                                            <h5 class="title">Service</h5>
-                                            <div class="single-average-wrap d-flex align-items-center">
-                                                <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" style="width: 80%"></div>
-                                                </div>
-                                                <span class="rating">4.5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="single-average-rating">
-                                            <h5 class="title">Quality</h5>
-                                            <div class="single-average-wrap d-flex align-items-center">
-                                                <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" style="width: 80%"></div>
-                                                </div>
-                                                <span class="rating">4.5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="single-average-rating">
-                                            <h5 class="title">Location</h5>
-                                            <div class="single-average-wrap d-flex align-items-center">
-                                                <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" style="width: 80%"></div>
-                                                </div>
-                                                <span class="rating">4.5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="single-average-rating">
-                                            <h5 class="title">Price</h5>
-                                            <div class="single-average-wrap d-flex align-items-center">
-                                                <div class="progress flex-grow-1">
-                                                    <div class="progress-bar" style="width: 80%"></div>
-                                                </div>
-                                                <span class="rating">4.5</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
                             </div>
-                            <div class="listing-review-box mb-50 wow fadeInUp">
-                                <h4 class="title">Customer Review</h4>
-                                <ul class="review-list">
-                                    <li class="review">
-                                        <div class="thumb">
-                                            <img src="assets/images/listing/review-1.jpg" alt="review image">
-                                        </div>
-                                        <div class="review-content">
-                                            <h5>Moriana Steve</h5>
-                                            <span class="date">Sep 02, 2021</span>
-                                            <p>Musutrum orci montes hac at neque mollis taciti parturient vehicula interdum verra cubilia ipsum duis amet nullam sit ut ornare mattis urna. </p>
-                                            <div class="content-meta d-flex align-items-center justify-content-between">
-                                                <ul class="ratings ratings-three">
-                                                    <li><span class="av-rate">4.5</span></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                </ul>
-                                                <a href="#" class="reply"><i class="ti-share-alt"></i>Reply</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="review">
-                                        <div class="thumb">
-                                            <img src="assets/images/listing/review-2.jpg" alt="review image">
-                                        </div>
-                                        <div class="review-content">
-                                            <h5>Moriana Steve</h5>
-                                            <span class="date">Sep 02, 2021</span>
-                                            <p>Musutrum orci montes hac at neque mollis taciti parturient vehicula interdum verra cubilia ipsum duis amet nullam sit ut ornare mattis urna. </p>
-                                            <div class="content-meta d-flex align-items-center justify-content-between">
-                                                <ul class="ratings ratings-three">
-                                                    <li><span class="av-rate">4.5</span></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                </ul>
-                                                <a href="#" class="reply"><i class="ti-share-alt"></i>Reply</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="review">
-                                        <div class="thumb">
-                                            <img src="assets/images/listing/review-3.jpg" alt="review image">
-                                        </div>
-                                        <div class="review-content">
-                                            <h5>Moriana Steve</h5>
-                                            <span class="date">Sep 02, 2021</span>
-                                            <p>Musutrum orci montes hac at neque mollis taciti parturient vehicula interdum verra cubilia ipsum duis amet nullam sit ut ornare mattis urna. </p>
-                                            <div class="content-meta d-flex align-items-center justify-content-between">
-                                                <ul class="ratings ratings-three">
-                                                    <li><span class="av-rate">4.5</span></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                    <li class="star"><i class="flaticon-star-1"></i></li>
-                                                </ul>
-                                                <a href="#" class="reply"><i class="ti-share-alt"></i>Reply</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="listing-review-form mb-30 wow fadeInUp">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <h4 class="title">Write a Review</h4>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-rating">
-                                            <ul class="ratings">
-                                                <li><span>Rate Here:</span></li>
-                                                <li class="star"><i class="flaticon-star-1"></i></li>
-                                                <li class="star"><i class="flaticon-star-1"></i></li>
-                                                <li class="star"><i class="flaticon-star-1"></i></li>
-                                                <li class="star"><i class="flaticon-star-1"></i></li>
-                                                <li class="star"><i class="flaticon-star-1"></i></li>
-                                            </ul>
-                                            <span>(02 Reviews)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <form>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <div class="form_group">
-                                                <textarea class="form_control" placeholder="Write Message" name="message"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form_group">
-                                                <input type="text" class="form_control" placeholder="Your name" name="name" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <div class="form_group">
-                                                <input type="email" class="form_control" placeholder="Email here" name="email" required>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form_group">
-                                                <div class="single-checkbox d-flex">
-                                                    <input type="checkbox" id="check4" name="checkbox">
-                                                    <label for="check4"><span>Save my name, email, and website in this browser for the next time i comment.</span></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <div class="form_group">
-                                                <button class="main-btn icon-btn">Submit Review</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
                         <div class="releted-listing-area wow fadeInUp">
-                            <h3 class="title mb-20">Similar Restaurant</h3>
+                            <h3 class="title mb-20">Autos similares</h3>
                             <div class="releted-listing-slider-one">
-                                <div class="listing-item listing-grid-item-two">
-                                    <div class="listing-thumbnail">
-                                        <img src="assets/images/listing/listing-grid-7.jpg" alt="Listing Image">
-                                        <a href="#" class="cat-btn"><i class="flaticon-chef"></i></a>
-                                        <span class="featured-btn">Featured</span>
-                                     
-                                    </div>
-                                    <div class="listing-content">
-                                        <h3 class="title"><a href="listing-details-1.html">Pizza Recipe</a></h3>
-                                        <p>Popular restaurant in california</p>
-                                        <span class="phone-meta"><i class="ti-tablet"></i><a href="tel:+982653652-05">+98 (265) 3652 - 05</a><span class="status st-open">Open</span></span>
-                                        <div class="listing-meta">
-                                            <ul>
-                                                <li><span><i class="ti-location-pin"></i>California, USA</span></li>
-                                                <li><span><i class="ti-heart"></i><a href="#">Save</a></span></li>
-                                            </ul>
+                                <?php
+                                // Obtener los términos de la taxonomía 'type_car' para el auto actual
+                                $terms = wp_get_post_terms(get_the_ID(), 'type_car');
+
+                                if (!empty($terms)) {
+                                    $type_car = $terms[0]->slug;
+
+                                    // Consulta para obtener autos similares con el mismo tipo de carro
+                                    $args = array(
+                                        'post_type' => 'cars', // Ajusta esto al nombre de tu tipo de publicación personalizada
+                                        'posts_per_page' => 3, // Cambia la cantidad de autos similares que deseas mostrar
+                                        'tax_query' => array(
+                                            array(
+                                                'taxonomy' => 'type_car',
+                                                'field' => 'slug',
+                                                'terms' => $type_car,
+                                            ),
+                                        ),
+                                        'post__not_in' => array(get_the_ID()), // Excluir el auto actual
+                                    );
+
+                                    $related_cars = new WP_Query($args);
+
+                                    while ($related_cars->have_posts()) : $related_cars->the_post();
+                                    ?>
+                                        <div class="listing-item listing-grid-item-two">
+                                            <div class="listing-thumbnail">
+                                                <img src="<?php echo get_the_post_thumbnail_url(); ?>" alt="Listing Image">
+                                                <span class="featured-btn">
+                                                    <?php echo ($terms = wp_get_post_terms(get_the_ID(), 'condition')) ? implode(', ', array_map('esc_html', wp_list_pluck($terms, 'name'))) : 'Condicion no especificada'; ?>
+                                                </span>
+                                            </div>
+                                            <div class="listing-content">
+                                                <h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+                                                <!-- Agrega cualquier otra información que desees mostrar aquí -->
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="listing-item listing-grid-item-two">
-                                    <div class="listing-thumbnail">
-                                        <img src="assets/images/listing/listing-grid-8.jpg" alt="Listing Image">
-                                        <a href="#" class="cat-btn"><i class="flaticon-dumbbell"></i></a>
-                                        <ul class="ratings ratings-three">
-                                            <li class="star"><i class="flaticon-star-1"></i></li>
-                                            <li class="star"><i class="flaticon-star-1"></i></li>
-                                            <li class="star"><i class="flaticon-star-1"></i></li>
-                                            <li class="star"><i class="flaticon-star-1"></i></li>
-                                            <li class="star"><i class="flaticon-star-1"></i></li>
-                                            <li><span><a href="#">(02 Reviews)</a></span></li>
-                                        </ul>
-                                    </div>
-                                    <div class="listing-content">
-                                        <h3 class="title"><a href="listing-details-1.html">Gym Ground</a></h3>
-                                        <p>Popular restaurant in california</p>
-                                        <span class="phone-meta"><i class="ti-tablet"></i><a href="tel:+982653652-05">+98 (265) 3652 - 05</a><span class="status st-close">close</span></span>
-                                        <div class="listing-meta">
-                                            <ul>
-                                                <li><span><i class="ti-location-pin"></i>California, USA</span></li>
-                                                <li><span><i class="ti-heart"></i><a href="#">Save</a></span></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="listing-item listing-grid-item-two">
-                                    <div class="listing-thumbnail">
-                                        <img src="assets/images/listing/listing-grid-9.jpg" alt="Listing Image">
-                                        <a href="#" class="cat-btn"><i class="flaticon-government"></i></a>
-                                        <span class="featured-btn">Caracteristicas</span>
-                                     
-                                    </div>
-                                    <div class="listing-content">
-                                        <h3 class="title"><a href="listing-details-1.html">City Palace</a></h3>
-                                        <p>Popular restaurant in california</p>
-                                        <span class="phone-meta"><i class="ti-tablet"></i><a href="tel:+982653652-05">+98 (265) 3652 - 05</a><span class="status st-open">Open</span></span>
-                                        <div class="listing-meta">
-                                            <ul>
-                                                <li><span><i class="ti-location-pin"></i>California, USA</span></li>
-                                                <li><span><i class="ti-heart"></i><a href="#">Save</a></span></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                    <?php
+                                    endwhile;
+
+                                    wp_reset_postdata();
+                                }
+                                ?>
                             </div>
                         </div>
+
                     </div>
             <div class="col-lg-4">
                 <div class="sidebar-widget-area">
