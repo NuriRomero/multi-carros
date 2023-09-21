@@ -27,9 +27,9 @@ get_header();
                                             name="search" required>
                                         <i class="ti-search"></i>
                                     </div>
-                                    <div class="form_group cars-categories">
+                                    <div class="form_group cars-categories" id="filtro-multiple">
                                         <!-- brand selector  -->
-                                        <select class="wide" id="cars-brand-selector">
+                                        <select class="wide" id="cars-brand-selector" class="filtro-select">
                                             <option data-display="Todas las marcas">Todas las marcas</option>
                                             <?php
                                             $args = array(
@@ -45,8 +45,8 @@ get_header();
                                         </select>
 
                                         <!-- fuel selector  -->
-                                        <select class="wide" id="cars-fuel-selector">
-                                            <option data-dsplay="Todas los tipos de combustibles">Todos los tipos de
+                                        <select class="wide" id="cars-fuel-selector" class="filtro-select">
+                                            <option data-dsplay="Todos los tipos de combustibles">Todos los tipos de
                                                 combustible</option>
                                             <?php
                                             $args = array(
@@ -62,7 +62,7 @@ get_header();
                                         </select>
 
                                         <!-- condition selector  -->
-                                        <select class="wide" id="cars-condition-selector">
+                                        <select class="wide" id="cars-condition-selector" class="filtro-select">
                                             <option data-dsplay="Todos las condiciones de autos">Todas las condiciones
                                                 de autos</option>
                                             <?php
@@ -78,7 +78,7 @@ get_header();
                                             ?>
                                         </select>
                                         <!-- type_car selector  -->
-                                        <select class="wide" id="cars-type_car-selector">
+                                        <select class="wide" id="cars-type_car-selector" class="filtro-select">
                                             <option data-dsplay="Todos los estados">Todas los tipos de auto</option>
                                             <?php
                                             $args = array(
