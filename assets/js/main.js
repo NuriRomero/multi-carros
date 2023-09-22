@@ -401,31 +401,184 @@
   );
 
   // Selector de categorias con ajax se asigna el selector
-  // Selector de categorias con ajax se asigna el selector
-jQuery(document).ready(function ($) {
-  // Selector de selectores de filtro
-  var filtroSelects = $('.filtro-select');
+// Selector de taxonomias con ajax muestra los resultados de marca de carro
+$("#cars-brand-selector").change(function () {
+  console.log("Brand seleccionado: " + $(this).find(":selected").val());
 
-  // Selector de resultados
-  var resultadosDiv = $('#listing-cars');
+  $.ajax({
+      url: cars.ajaxurl,
+      method: "POST",
+      data: {
+          action: "filtrar_carros_por_marca",
+          brand: $(this).find(":selected").val(),
+      },
+      beforeSend: function () {
+          $("#listing-cars").html("Cargando");
+      },
 
-  // Manejar cambios en los selectores
-  filtroSelects.on('change', function () {
-      // Recopilar las selecciones actuales de todos los selectores
-      var formData = $('#filtro-multiple').serialize();
+      success: function (data) {
+          console.log(data);
+          let cars_grid_html = "";
+          data.forEach((element) => {
+              cars_grid_html += `<div class="col-md-6 col-sm-12">
+                  <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                      <div class="listing-thumbnail">
+                      <img src="${element.post_thumbnail_url}"></img>
+                          <span class="featured-btn">${element.estado}</span>
+                      </div>
+                      <div class="listing-content">
+                          <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                          <div class="listing-meta">
+                          <ul>
+                          <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                          <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                              </ul>
+                          </div>
+                      </div>
+                  </div>
+              </div>`;
+          });
+          $("#listing-cars").html(cars_grid_html);
+      },
 
-      // Realizar la solicitud AJAX para actualizar los resultados
-      $.ajax({
-          type: 'POST',
-          url: ajaxurl,
-          data: formData + '&action=filtrar_resultados', // Agregar el parámetro action
-          success: function (response) {
-              // Actualizar la div de resultados con los nuevos resultados
-              resultadosDiv.html(response);
-          },
-      });
+      error: function (textStatus, errorThrown) {
+          console.log("Error en la solicitud AJAX:", textStatus, errorThrown);
+      },
   });
 });
+
+// Selector de taxonomias con ajax muestra los resultados de combustible
+$("#cars-fuel-selector").change(function () {
+  console.log($(this).find(":selected").val());
+  $.ajax({
+      url: cars.ajaxurl,
+      method: "POST",
+      data: {
+          action: "filtrar_por_combustible",
+          fuel: $(this).find(":selected").val(),
+      },
+      beforeSend: function () {
+          $("#listing-cars").html("Cargando");
+      },
+
+      success: function (data) {
+          console.log(data);
+          let cars_grid_html = "";
+          data.forEach((element) => {
+            cars_grid_html += `<div class="col-md-6 col-sm-12">
+            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                <div class="listing-thumbnail">
+                <img src="${element.post_thumbnail_url}"></img>
+                    <span class="featured-btn">${element.estado}</span>
+                </div>
+                <div class="listing-content">
+                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                    <div class="listing-meta">
+                    <ul>
+                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+          });
+          $("#listing-cars").html(cars_grid_html);
+      },
+
+      error: function (error) {
+          console.log(error);
+      },
+  });
+});
+
+$("#cars-condition-selector").change(function () {
+  $.ajax({
+      url: cars.ajaxurl,
+      method: "POST",
+      data: {
+          action: "filtrar_por_condicion",
+          condition: $(this).find(":selected").val(),
+      },
+      beforeSend: function () {
+          $("#listing-cars").html("Cargando");
+      },
+
+      success: function (data) {
+          console.log(data);
+          let cars_grid_html = "";
+          data.forEach((element) => {
+            cars_grid_html += `<div class="col-md-6 col-sm-12">
+            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                <div class="listing-thumbnail">
+                <img src="${element.post_thumbnail_url}"></img>
+                    <span class="featured-btn">${element.estado}</span>
+                </div>
+                <div class="listing-content">
+                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                    <div class="listing-meta">
+                    <ul>
+                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+          });
+          $("#listing-cars").html(cars_grid_html);
+      },
+
+      error: function (error) {
+          console.log(error);
+      },
+  });
+});
+
+$("#cars-type_car-selector").change(function () {
+  $.ajax({
+      url: cars.ajaxurl,
+      method: "POST",
+      data: {
+          action: "filtrar_por_tipo_car",
+          type_car: $(this).find(":selected").val(),
+      },
+      beforeSend: function () {
+          $("#listing-cars").html("Cargando");
+      },
+
+      success: function (data) {
+          console.log(data);
+          let cars_grid_html = "";
+          data.forEach((element) => {
+            cars_grid_html += `<div class="col-md-6 col-sm-12">
+            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                <div class="listing-thumbnail">
+                <img src="${element.post_thumbnail_url}"></img>
+                    <span class="featured-btn">${element.estado}</span>
+                </div>
+                <div class="listing-content">
+                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                    <div class="listing-meta">
+                    <ul>
+                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+          });
+          $("#listing-cars").html(cars_grid_html);
+      },
+
+      error: function (error) {
+          console.log(error);
+      },
+  });
+});
+
+
 
 
 })(window.jQuery);
