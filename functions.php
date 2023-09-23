@@ -21,6 +21,9 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
  */
 
 function multi_carros_setup() {
+
+	add_image_size( 'car_size_photo', 770, 500, true);
+	add_image_size( 'galery_carousel', 170, 170, true);
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.
@@ -137,17 +140,121 @@ function multi_carros_widgets_init() {
 }
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
 
-//Filter by category
-function custom_category_filter($query) {
-    if (is_admin() || !is_main_query()) {
-        return;
-    }
+// Función para manejar el campo ciudad
+function mi_funcion_personalizada_despues_de_guardar($post_id, $cmb2, $updated_data) {
+    // Verifica si los campos personalizados del grupo de campos 'cmb_field_map' se guardaron o actualizaron
+    if ($cmb2->has_group('cmb_field_map')) {
+        // Obtiene los valores de los campos personalizados 'cmb_field_map'
+        $latitude = $cmb2->get_value('latitude', 'cmb_field_map');
+        $longitude = $cmb2->get_value('longitude', 'cmb_field_map');
 
-    if (isset($_GET['category']) && is_array($_GET['category'])) {
-        $query->set('category__in', $_GET['category']);
+        // Llama a la API de geocodificación inversa para obtener el nombre de la ciudad
+        $api_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&key=AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs";
+
+        $response = wp_remote_get($api_url);
+
+        if (!is_wp_error($response)) {
+            $body = wp_remote_retrieve_body($response);
+            $data = json_decode($body);
+
+            // Verifica si la respuesta tiene resultados
+            if ($data && isset($data->results[0]) && isset($data->results[0]->address_components)) {
+                foreach ($data->results[0]->address_components as $component) {
+                    if (in_array('locality', $component->types)) {
+                        // Obtiene el nombre de la ciudad
+                        $city_name = $component->long_name;
+                        break;
+                    }
+                }
+
+                if (!empty($city_name)) {
+                    // Actualiza un campo personalizado con el nombre de la ciudad
+                    update_post_meta($post_id, 'nombre_ciudad', $city_name);
+                } else {
+                    echo 'Ciudad no encontrada';
+                }
+            } else {
+                echo 'No se encontraron resultados de geocodificación';
+            }
+        } else {
+            echo 'Error al llamar a la API de geocodificación';
+        }
     }
 }
-add_action('pre_get_posts', 'custom_category_filter');
+
+add_action('cmb2_save_post_fields', 'mi_funcion_personalizada_despues_de_guardar', 10, 3);
+
+function obtener_numero_total_autos_nuevos() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'nuevo', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
+
+    // Realizar la consulta de WordPress
+    $autos_nuevos_query = new WP_Query($args);
+
+    // Obtener el número total de autos nuevos
+    $numero_total_autos_nuevos = $autos_nuevos_query->found_posts;
+
+    // Retornar el número total como resultado
+    return $numero_total_autos_nuevos;
+}
+
+function obtener_numero_total_autos_semi_nuevos() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'semi-nuevo', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
+
+    // Realizar la consulta de WordPress
+    $autos_semi_nuevos_query = new WP_Query($args);
+
+    // Obtener el número total de autos nuevos
+    $numero_total_autos_semi_nuevos = $autos_semi_nuevos_query->found_posts;
+
+    // Retornar el número total como resultado
+    return $numero_total_autos_semi_nuevos;
+}
+
+function obtener_numero_total_autos_usados() {
+    
+    $args = array(
+        'post_type' => 'cars', 
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'condition',
+                'field'    => 'slug',
+                'terms'    => 'usado', 
+            ),
+        ),
+        'posts_per_page' => -1, 
+    );
+
+    // Realizar la consulta de WordPress
+    $autos_usados_query = new WP_Query($args);
+
+    // Obtener el número total de autos 
+    $numero_total_autos_usados = $autos_usados_query->found_posts;
+
+    // Retornar el número total como resultado
+    return $numero_total_autos_usados;
+}
 // Función para manejar el formulario
 function submit_car_listing_handler() {
     if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
@@ -162,18 +269,18 @@ function submit_car_listing_handler() {
             'post_title'   => $post_title,
             'post_content' => $post_content,
             'post_status'  => 'publish',
-            'post_type'    => 'cars' // Establecer el tipo de post personalizado "cars"
+            'post_type'    => 'cars' // cars
         );
 
-        // Insertar el nuevo post personalizado "cars"
+        // new post
         $post_id = wp_insert_post($new_post);
 
         if ($post_id) {
-            // Agregar metadatos personalizados para el post
+            // metadata
             update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
             update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
             update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'ano_modelo', sanitize_text_field($_POST['ano_modelo']));
+            update_post_meta($post_id, 'anio_modelo', sanitize_text_field($_POST['anio_modelo']));
             update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
             update_post_meta($post_id, 'transmision', $transmision);
             update_post_meta($post_id, 'precio', floatval($_POST['precio']));
@@ -215,6 +322,7 @@ add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler')
  * Enqueue scripts and styles.
  */
 function multi_carros_scripts() {
+
 	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
 	wp_enqueue_style( 'bootstrap',get_template_directory_uri(). '/assets/css/bootstrap.min.css', array(),'4.6.0');
 	wp_enqueue_style( 'themify-icons',get_template_directory_uri(). '/assets/fonts/themify-icons/themify-icons.css', array(),MULTI_CARROS_VERSION);
@@ -247,11 +355,10 @@ function multi_carros_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+	wp_localize_script( 'main-fioxen','cars',array(
+		'ajaxurl' => admin_url( 'admin-ajax.php' ),
+	) );
 }
-
-
-
-
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
 
 /**
@@ -259,6 +366,7 @@ add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
  */
 require get_template_directory() . '/inc/custom-header.php';
 
+require get_template_directory() . '/inc/cars-filters.php';
 /**
  * Custom template tags for this theme.
  */

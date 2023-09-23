@@ -26,29 +26,37 @@ if( $cars->have_posts() ):
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="listing-item listing-grid-one mb-45 wow fadeInUp" dta-wow-delay="10ms">
                             <div class="listing-thumbnail">
-                                <?php the_post_thumbnail();?>
-                                <span class="featured-btn"></i><?php echo get_post_meta(get_the_ID(),'Estado',true); ?></span>
+                            <?php
+                                $image_url = get_the_post_thumbnail_url(get_the_ID(), 'car_size_photo');
+                                if ($image_url) {
+                                    echo '<img src="' . esc_url($image_url) . '" href="' . esc_url($image_url) . '" class="img-fluid img-popup" alt="' . esc_attr(get_the_title()) . '">';
+                                } else {
+                                    echo 'No se ha proporcionado una imagen válida.';
+                                }
+                                ?>
+                                <span class="featured-btn"></i>
+                                <?php echo !empty($terms = wp_get_post_terms(get_the_ID(), 'condition')) ? esc_html($terms[0]->name) : 'Condicion no especificada'; ?>
+                                </span>
                                 </li></span>
                             </div>
                             <div class="listing-content">
                                 <h3 class="title">
                                     <a href="<?php the_permalink(); ?>">
                                         <?php
-                                        $modelo = get_post_meta(get_the_ID(),'Modelo',true);
-                                        $anio = get_post_meta(get_the_ID(),'Año',true);
+                                        $modelo = get_post_meta(get_the_ID(),'main_information_metabox_modelo',true);
+                                        $anio = get_post_meta(get_the_ID(),'main_information_metabox_año_modelo',true);
                                         echo $modelo . ' ' . $anio;
                                         ?>
                                     </a>
                                 </h3>
                                 <div class="listing-meta">
                                     <ul>
-                                        <li><span><i
-                                                    class="ti-location-pin"></i><?php echo get_post_meta(get_the_ID(),'Ciudad',true); ?></span>
+                                        <li><span><i class="ti-location-pin"></i><?php echo get_post_meta(get_the_ID(),'main_information_metabox_ciudad',true); ?></span>
                                         </li>
-                                        <li><span><i class="ti-heart"></i><a href="#">Guardar</a></span></li>
+                                        
                                     </ul>
                                 </div>
-                                <span class="price">Precio: <?php echo get_post_meta(get_the_ID(),'Precio',true); ?></span>
+                                <span class="price">Precio: <?php echo get_post_meta(get_the_ID(),'main_information_metabox_precio',true); ?></span>
                             </div>
                             <div class="listing-meta">
 

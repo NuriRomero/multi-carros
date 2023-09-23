@@ -17,11 +17,54 @@ if (!is_active_sidebar('sidebar-1')) {
 
     <!-- Agrega el formulario de filtrado aquí -->
     <form action="" method="get">
-        <h2>Filtrar por Categoría</h2>
+
+        <h2>Filtrar por Marca</h2>
         <?php
-        $categories = get_categories(array('slug' => 'cars')); // Obtener categoría "cars"
-        foreach ($categories as $category) {
-            echo '<label><input type="checkbox" name="category[]" value="' . $category->term_id . '"> ' . $category->name . '</label><br>';
+         $terms_brand = get_terms(array(
+            'taxonomy' => 'brand', 
+            'hide_empty' => false,
+        ));
+
+        foreach ($terms_brand as $term) {
+            echo '<label><input type="checkbox" name="brand[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
+            
+        }
+        ?>
+
+        <h2>Tipo de combustible</h2>
+        <?php
+        $terms_type_car = get_terms(array(
+            'taxonomy' => 'type_car', 
+            'hide_empty' => false,
+        ));
+
+        foreach ($terms_type_car as $term) {
+            echo '<label><input type="checkbox" name="type_car[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
+        }
+        ?>
+      
+
+        <h2>Estatus</h2>
+        <?php
+        $terms_type_car = get_terms(array(
+            'taxonomy' => 'status', 
+            'hide_empty' => false, 
+        ));
+
+        foreach ($terms_type_car as $term) {
+            echo '<label><input type="checkbox" name="status[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
+        }
+        ?>
+        
+        <h2>Tipo de auto</h2>
+        <?php
+        $terms_type_car = get_terms(array(
+            'taxonomy' => 'type_car', 
+            'hide_empty' => false, 
+        ));
+
+        foreach ($terms_type_car as $term) {
+            echo '<label><input type="checkbox" name="type_car[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
         }
         ?>
         <input type="submit" value="Filtrar">
