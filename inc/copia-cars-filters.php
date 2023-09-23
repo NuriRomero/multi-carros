@@ -66,7 +66,7 @@ function filtrar_por_criterios()
                 foreach ($terms as $term) {
                     $condicion=esc_html($term->name) ;
                 }
-            } else {
+                } else {
                 echo 'Condicion no especificado';
             }
                                     
