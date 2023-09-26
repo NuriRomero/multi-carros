@@ -40,14 +40,7 @@ if( $cars->have_posts() ):
                                 </li></span>
                             </div>
                             <div class="listing-content">
-                                <h3 class="title">
-                                    <a href="<?php the_permalink(); ?>">
-                                        <?php
-                                        $modelo = get_post_meta(get_the_ID(),'main_information_metabox_modelo',true);
-                                        $anio = get_post_meta(get_the_ID(),'main_information_metabox_año_modelo',true);
-                                        echo $modelo . ' ' . $anio;
-                                        ?>
-                                    </a>
+                                <h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                                 </h3>
                                 <div class="listing-meta">
                                     <ul>

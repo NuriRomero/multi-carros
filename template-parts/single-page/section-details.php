@@ -25,31 +25,22 @@
                                                 <ul>
                                                     <li><span><i class="ti-location-pin"></i>
                                                     <?php 
-                                                 // Obtén el ID del post actual
-                                                        // Obtén el ID del post actual
                                                         $post_id = get_the_ID();
 
-                                                        // Define el nombre del campo que quieres recuperar
                                                         $campo_ciudad = 'main_information_metabox_ciudad';
 
-                                                        // Recupera el valor del campo 'Ciudad' para el post actual
                                                         $ubicacion_value = get_post_meta($post_id, $campo_ciudad, true);
                                                         var_dump($ubicacion_value);
 
-                                                        // Verifica si $ubicacion_value es un array
                                                         if (is_array($ubicacion_value)) {
-                                                            // Si es un array, asume que ya contiene el texto de ubicación
                                                             $texto_ubicacion = isset($ubicacion_value['address']) ? $ubicacion_value['address'] : '';
                                                         } else {
-                                                            // Si no es un array, intenta decodificarlo como JSON
+                                                            
                                                             $ubicacion_array = json_decode($ubicacion_value, true);
 
-                                                            // Verifica si la decodificación fue exitosa y si existe la clave 'address'
                                                             if (is_array($ubicacion_array) && isset($ubicacion_array['address'])) {
-                                                                // Si es un array y contiene la clave 'address', obtén el texto de ubicación
                                                                 $texto_ubicacion = $ubicacion_array['address'];
                                                             } else {
-                                                                // Si no se puede decodificar como JSON o no contiene 'address', asume que es una cadena de texto directa
                                                                 $texto_ubicacion = $ubicacion_value;
                                                             }
                                                         }
@@ -138,7 +129,6 @@
                                             </div>
                                             <div class="info">
                                                 <h6>Transmision: <?php 
-                                        // Obtener el valor del campo personalizado 'Modelo'
                                         echo get_post_meta(get_the_ID(), 'main_information_metabox_transmision', true);
 
                                         ?></h6>
@@ -153,9 +143,7 @@
                                             <div class="info">
                                                 <h6>Tipo de Auto
                                                     <?php $post_id = get_the_ID();
-                                                    // Obtener los términos seleccionados en la taxonomía 'brand' para esta entrada
                                                     $terms = wp_get_post_terms($post_id, 'type_car');
-                                                    // Verificar si se encontraron términos y mostrarlos si existen
                                                     if (!empty($terms)) {
                                                         
                                                         foreach ($terms as $term) {
@@ -229,11 +217,9 @@
 
                                 if (!empty($terms)) {
                                     $type_car = $terms[0]->slug;
-
-                                    // Consulta para obtener autos similares con el mismo tipo de carro
                                     $args = array(
-                                        'post_type' => 'cars', // Ajusta esto al nombre de tu tipo de publicación personalizada
-                                        'posts_per_page' => 3, // Cambia la cantidad de autos similares que deseas mostrar
+                                        'post_type' => 'cars', 
+                                        'posts_per_page' => 3, 
                                         'tax_query' => array(
                                             array(
                                                 'taxonomy' => 'type_car',
@@ -241,7 +227,7 @@
                                                 'terms' => $type_car,
                                             ),
                                         ),
-                                        'post__not_in' => array(get_the_ID()), // Excluir el auto actual
+                                        'post__not_in' => array(get_the_ID()), 
                                     );
 
                                     $related_cars = new WP_Query($args);
