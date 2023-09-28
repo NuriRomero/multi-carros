@@ -19,47 +19,23 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
  * runs before the init hook. The init hook is too late for some features, such
  * as indicating support for post thumbnails.
  */
-
 function multi_carros_setup() {
-	/*
-		* Make theme available for translation.
-		* Translations can be filed in the /languages/ directory.
-		* If you're building a theme based on Multi Carros, use a find and replace
-		* to change 'multi-carros' to the name of your theme in all the template files.
-		*/
 	load_theme_textdomain( 'multi-carros', get_template_directory() . '/languages' );
 
-	// Add default posts and comments RSS feed links to head.
 	add_theme_support( 'automatic-feed-links' );
 
-	/*
-		* Let WordPress manage the document title.
-		* By adding theme support, we declare that this theme does not use a
-		* hard-coded <title> tag in the document head, and expect WordPress to
-		* provide it for us.
-		*/
 	add_theme_support( 'title-tag' );
 
-	/*
-		* Enable support for Post Thumbnails on posts and pages.
-		*
-		* @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
-		*/
 	add_theme_support( 'post-thumbnails' );
 
-	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'primary-menu' => esc_html__( 'Primary', 'multi-carros' ),
-			'footer-menu' => esc_html__( 'Secondary', 'multi-carros' ),
+			'primary-menu'            => esc_html__( 'Primary', 'multi-carros' ),
+			'footer-menu'             => esc_html__( 'Secondary', 'multi-carros' ),
 			'footer-menu-quick-links' => esc_html__( 'Tertiary', 'multi-carros' ),
 		)
 	);
 
-	/*
-		* Switch default core markup for search form, comment form, and comments
-		* to output valid HTML5.
-		*/
 	add_theme_support(
 		'html5',
 		array(
@@ -73,7 +49,6 @@ function multi_carros_setup() {
 		)
 	);
 
-	// Set up the WordPress core custom background feature.
 	add_theme_support(
 		'custom-background',
 		apply_filters(
@@ -85,14 +60,8 @@ function multi_carros_setup() {
 		)
 	);
 
-	// Add theme support for selective refresh for widgets.
 	add_theme_support( 'customize-selective-refresh-widgets' );
 
-	/**
-	 * Add support for core custom logo.
-	 *
-	 * @link https://codex.wordpress.org/Theme_Logo
-	 */
 	add_theme_support(
 		'custom-logo',
 		array(
@@ -104,23 +73,15 @@ function multi_carros_setup() {
 	);
 }
 add_action( 'after_setup_theme', 'multi_carros_setup' );
-
 /**
- * Set the content width in pixels, based on the theme's design and stylesheet.
- *
- * Priority 0 to make it available to lower priority callbacks.
- *
- * @global int $content_width
+ * Define the content width for embedded media and images.
  */
 function multi_carros_content_width() {
 	$GLOBALS['content_width'] = apply_filters( 'multi_carros_content_width', 640 );
 }
 add_action( 'after_setup_theme', 'multi_carros_content_width', 0 );
-
 /**
  * Register widget area.
- *
- * @link https://developer.wordpress.org/themes/functionality/sidebars/#registering-a-sidebar
  */
 function multi_carros_widgets_init() {
 	register_sidebar(
@@ -136,112 +97,112 @@ function multi_carros_widgets_init() {
 	);
 }
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
-
-// Función para manejar el formulario
+/**
+ * Handles the submission of car listings from a form.
+ */
 function submit_car_listing_handler() {
-    if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
-        $post_title = sanitize_text_field($_POST['marca'] . ' ' . $_POST['modelo']);
-        $post_content = wp_kses_post($_POST['descripcion']);
+	// Verificar si se ha enviado el formulario correctamente.
+	if ( isset( $_POST['action'] ) && 'submit_car_listing' === $_POST['action'] ) {
+		check_admin_referer( 'car_listing_nonce' );
 
-        // Asegurarse de registrar el tipo de post personalizado "cars" previamente
+		// Verificar si los índices del array $_POST están definidos antes de usarlos.
+		$marca       = isset( $_POST['marca'] ) ? sanitize_text_field( wp_unslash( $_POST['marca'] ) ) : '';
+		$modelo      = isset( $_POST['modelo'] ) ? sanitize_text_field( wp_unslash( $_POST['modelo'] ) ) : '';
+		$descripcion = isset( $_POST['descripcion'] ) ? sanitize_textarea_field( wp_unslash( $_POST['descripcion'] ) ) : '';
+		$transmision = isset( $_POST['transmision'] ) ? sanitize_text_field( wp_unslash( $_POST['transmision'] ) ) : '';
+		$color       = isset( $_POST['color'] ) ? sanitize_text_field( wp_unslash( $_POST['color'] ) ) : '';
+		$anio_modelo = isset( $_POST['anio_modelo'] ) ? sanitize_text_field( wp_unslash( $_POST['anio_modelo'] ) ) : '';
+		$ciudad      = isset( $_POST['ciudad'] ) ? sanitize_text_field( wp_unslash( $_POST['ciudad'] ) ) : '';
+		$precio      = isset( $_POST['precio'] ) ? floatval( $_POST['precio'] ) : 0.0; // Asumiendo que el precio es un número decimal.
 
-        $transmision = isset($_POST['transmision']) ? implode(', ', $_POST['transmision']) : '';
+		// Crear un nuevo post de tipo "car_listing".
+		$new_post = array(
+			'post_title'   => $marca . ' ' . $modelo, // Título del post.
+			'post_content' => $descripcion, // Contenido del post.
+			'post_status'  => 'publish', // Estado del post (publicado).
+			'post_type'    => 'car_listing', // Tipo de contenido personalizado.
+		);
 
-        $new_post = array(
-            'post_title'   => $post_title,
-            'post_content' => $post_content,
-            'post_status'  => 'publish',
-            'post_type'    => 'cars' // cars
-        );
+		// Insertar el nuevo post en la base de datos.
+		$post_id = wp_insert_post( $new_post );
 
-        // new post
-        $post_id = wp_insert_post($new_post);
+		// Asignar categorías al post si es necesario.
+		$categorias = array( 'nombre_de_la_categoria' ); // Reemplaza 'nombre_de_la_categoria' con el nombre de la categoría adecuada.
+		wp_set_post_categories( $post_id, $categorias );
 
-        if ($post_id) {
-            // metadata
-            update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
-            update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
-            update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'anio_modelo', sanitize_text_field($_POST['anio_modelo']));
-            update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
-            update_post_meta($post_id, 'transmision', $transmision);
-            update_post_meta($post_id, 'precio', floatval($_POST['precio']));
+		// Actualizar campos personalizados si es necesario.
+		update_post_meta( $post_id, 'transmision', $transmision );
+		update_post_meta( $post_id, 'color', $color );
+		update_post_meta( $post_id, 'anio_modelo', $anio_modelo );
+		update_post_meta( $post_id, 'ciudad', $ciudad );
+		update_post_meta( $post_id, 'precio', $precio );
 
-            // Subir y adjuntar la imagen al post
-            if ($_FILES['imagen']['tmp_name']) {
-                $upload = wp_upload_bits($_FILES['imagen']['name'], null, file_get_contents($_FILES['imagen']['tmp_name']));
-                if (isset($upload['error']) && $upload['error'] != 0) {
-                    echo "Hubo un error al subir la imagen.";
-                } else {
-                    $image_path = $upload['file'];
-                    $file_type = wp_check_filetype(basename($image_path), null);
-                    $attachment = array(
-                        'post_mime_type' => $file_type['type'],
-                        'post_title' => $post_title,
-                        'post_content' => '',
-                        'post_status' => 'inherit'
-                    );
-                    $attachment_id = wp_insert_attachment($attachment, $image_path, $post_id);
-                    require_once(ABSPATH . 'wp-admin/includes/image.php');
-                    $attachment_data = wp_generate_attachment_metadata($attachment_id, $image_path);
-                    wp_update_attachment_metadata($attachment_id, $attachment_data);
-                    set_post_thumbnail($post_id, $attachment_id);
-                }
-            }
+		// Redirigir después de crear el post.
+		wp_safe_redirect( get_permalink( $post_id ) );
+		exit;
 
-            echo "¡El post de tipo 'cars' se creó exitosamente! Puedes verlo <a href='" . get_permalink($post_id) . "'>aquí</a>.";
-        } else {
-            echo "Hubo un error al crear el post.";
-        }
-    }
+	}
 }
 
-// Registra la acción para manejar el formulario
-add_action('admin_post_submit_car_listing', 'submit_car_listing_handler');
-add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler');
+// Agregar las acciones con los ganchos adecuados.
+add_action( 'admin_post_submit_car_listing', 'submit_car_listing_handler' );
+add_action( 'admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler' );
 
 /**
- * Enqueue scripts and styles.
+ * Enqueue scripts and styles for the theme .
  */
 function multi_carros_scripts() {
-
 	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
-	wp_enqueue_style( 'bootstrap',get_template_directory_uri(). '/assets/css/bootstrap.min.css', array(),'4.6.0');
-	wp_enqueue_style( 'themify-icons',get_template_directory_uri(). '/assets/fonts/themify-icons/themify-icons.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'flaticon',get_template_directory_uri(). '/assets/fonts/flaticon/flaticon.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'magnific-popup',get_template_directory_uri(). '/assets/css/magnific-popup.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'slick',get_template_directory_uri(). '/assets/css/slick.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'nice-select',get_template_directory_uri(). '/assets/css/nice-select.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'jquery-ui',get_template_directory_uri(). '/assets/css/jquery-ui.min.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'animate',get_template_directory_uri(). '/assets/css/animate.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'default',get_template_directory_uri(). '/assets/css/default.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'style-fioxen',get_template_directory_uri(). '/assets/css/style.css', array(),MULTI_CARROS_VERSION);
-	wp_style_add_data( 'multi-carros-style', 'rtl', 'replace' );
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/assets/css/bootstrap.min.css', array(), '4.6.0' );
+	wp_enqueue_style( 'themify-icons', get_template_directory_uri() . '/assets/fonts/themify-icons/themify-icons.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'flaticon', get_template_directory_uri() . '/assets/fonts/flaticon/flaticon.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'magnific-popup', get_template_directory_uri() . '/assets/css/magnific-popup.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'owl.carousel', get_template_directory_uri() . '/assets/css/owl.carousel.min.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'owl.theme.default', get_template_directory_uri() . '/assets/css/owl.theme.default.min.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'nice-select', get_template_directory_uri() . '/assets/css/nice-select.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'jquery-ui', get_template_directory_uri() . '/assets/css/jquery-ui.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'meanmenu', get_template_directory_uri() . '/assets/css/meanmenu.min.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'wow', get_template_directory_uri() . '/assets/css/animate.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'style', get_template_directory_uri() . '/assets/css/style.css', array(), MULTI_CARROS_VERSION );
 
-	wp_enqueue_script( 'multi-carros-navigation', get_template_directory_uri() . '/js/navigation.js', array(), MULTI_CARROS_VERSION, true );
-	wp_enqueue_script('jquery');
-	wp_enqueue_script('popper', get_template_directory_uri().'/assets/js/popper.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('slick', get_template_directory_uri().'/assets/js/slick.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-magnific-popup', get_template_directory_uri().'/assets/js/jquery.magnific-popup.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('isotope', get_template_directory_uri().'/assets/js/isotope.pkgd.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('imagesloaded', get_template_directory_uri().'/assets/js/imagesloaded.pkgd.min.js', array(),MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('jquery-nice-select', get_template_directory_uri().'/assets/js/jquery.nice-select.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('counterup', get_template_directory_uri().'/assets/js/jquery.counterup.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-waypoints', get_template_directory_uri().'/assets/js/jquery.waypoints.js', array(),MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-ui ', get_template_directory_uri().'/assets/js/jquery-ui.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('wow', get_template_directory_uri().'/assets/js/wow.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('main-fioxen', get_template_directory_uri().'/assets/js/main.js', array(), MULTI_CARROS_VERSION,true);
-	
+	wp_enqueue_script( 'popper', get_template_directory_uri() . '/assets/js/popper.min.js', array( 'jquery' ), '1.16.0', true );
+	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/assets/js/bootstrap.min.js', array( 'jquery' ), '4.6.0', true );
+	wp_enqueue_script( 'jquery-ui', get_template_directory_uri() . '/assets/js/jquery-ui.js', array( 'jquery' ), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'wow', get_template_directory_uri() . '/assets/js/wow.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'magnific-popup', get_template_directory_uri() . '/assets/js/jquery.magnific-popup.js', array( 'jquery' ), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'owl.carousel', get_template_directory_uri() . '/assets/js/owl.carousel.min.js', array( 'jquery' ), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'meanmenu', get_template_directory_uri() . '/assets/js/jquery.meanmenu.js', array( 'jquery' ), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'ajax-mail', get_template_directory_uri() . '/assets/js/ajax-mail.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'main', get_template_directory_uri() . '/assets/js/main.js', array( 'jquery' ), MULTI_CARROS_VERSION, true );
 
-	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
-		wp_enqueue_script( 'comment-reply' );
-	}
-	wp_localize_script( 'main-fioxen','cars',array(
-		'ajaxurl' => admin_url( 'admin-ajax.php' ),
-	) );
+	wp_localize_script( 'ajax-mail', 'ajax_mail_params', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 }
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
+
+/**
+ * Enqueue comments reply script for threaded comments.
+ */
+function multi_carros_enqueue_comments_reply() {
+	if ( get_option( 'thread_comments' ) ) {
+		wp_enqueue_script( 'comment-reply' );
+	}
+}
+add_action( 'comment_form_before', 'multi_carros_enqueue_comments_reply' );
+
+/**
+ * Enqueue live preview scripts for the customizer.
+ */
+function multi_carros_customizer_live_preview() {
+	wp_enqueue_script(
+		'multi-carros-themecustomizer',
+		get_template_directory_uri() . '/assets/js/themecustomizer.js',
+		array( 'jquery', 'customize-preview' ),
+		MULTI_CARROS_VERSION,
+		true
+	);
+}
+add_action( 'customize_preview_init', 'multi_carros_customizer_live_preview' );
+
 
 /**
  * Implement the Custom Header feature.

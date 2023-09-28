@@ -18,22 +18,22 @@ get_header();
 	<main id="primary" class="site-main">
 
 		<?php
-        if(have_posts(  )):
+		if ( have_posts() ) :
 
-            while( have_posts(  ) ):
-                
-                the_content( );
-                the_post(  );
-                get_template_part( 'template-parts/front-page/section', 'hero' );
-                get_template_part( 'template-parts/front-page/section', 'category' );
-                get_template_part( 'template-parts/front-page/cars', 'listing' );
-                get_template_part( 'template-parts/front-page/cars', 'features' );
+			while ( have_posts() ) :
 
-            endwhile;
-        endif;
-        ?>
+				the_content();
+				the_post();
+				get_template_part( 'template-parts/front-page/section', 'hero' );
+				get_template_part( 'template-parts/front-page/section', 'category' );
+				get_template_part( 'template-parts/front-page/cars', 'listing' );
+				get_template_part( 'template-parts/front-page/cars', 'features' );
+
+			endwhile;
+		endif;
+		?>
 	</main>
-    
+	
 <?php
 
 get_sidebar();

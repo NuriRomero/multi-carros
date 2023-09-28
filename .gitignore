@@ -1,1 +1,4 @@
 Fioxen/
+vendor/
+phpcs.xml
+phpcs.xml.dist
