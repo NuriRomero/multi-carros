@@ -1,3 +1,4 @@
 Fioxen/
 .idea/
 phpcs.xml
+vendor/
