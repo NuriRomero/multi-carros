@@ -56,6 +56,6 @@ function multi_carros_customize_partial_blogdescription() {
  * Binds JS handlers to make Theme Customizer preview reload changes asynchronously.
  */
 function multi_carros_customize_preview_js() {
-	wp_enqueue_script( 'multi-carros-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ),MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'multi-carros-customizer', get_template_directory_uri() . '/js/customizer.js', array( 'customize-preview' ), MULTI_CARROS_VERSION, true );
 }
 add_action( 'customize_preview_init', 'multi_carros_customize_preview_js' );

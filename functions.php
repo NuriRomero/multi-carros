@@ -22,8 +22,8 @@ if ( ! defined( 'MULTI_CARROS_VERSION' ) ) {
 
 function multi_carros_setup() {
 
-	add_image_size( 'car_size_photo', 770, 500, true);
-	add_image_size( 'galery_carousel', 170, 170, true);
+	add_image_size( 'car_size_photo', 770, 500, true );
+	add_image_size( 'galery_carousel', 170, 170, true );
 	/*
 		* Make theme available for translation.
 		* Translations can be filed in the /languages/ directory.
@@ -53,8 +53,8 @@ function multi_carros_setup() {
 	// This theme uses wp_nav_menu() in one location.
 	register_nav_menus(
 		array(
-			'primary-menu' => esc_html__( 'Primary', 'multi-carros' ),
-			'footer-menu' => esc_html__( 'Secondary', 'multi-carros' ),
+			'primary-menu'            => esc_html__( 'Primary', 'multi-carros' ),
+			'footer-menu'             => esc_html__( 'Secondary', 'multi-carros' ),
 			'footer-menu-quick-links' => esc_html__( 'Tertiary', 'multi-carros' ),
 		)
 	);
@@ -141,182 +141,182 @@ function multi_carros_widgets_init() {
 add_action( 'widgets_init', 'multi_carros_widgets_init' );
 
 // Función para manejar el campo ciudad
-function mi_funcion_personalizada_despues_de_guardar($post_id, $cmb2, $updated_data) {
-    // Verifica si los campos personalizados del grupo de campos 'cmb_field_map' se guardaron o actualizaron
-    if ($cmb2->has_group('cmb_field_map')) {
-        // Obtiene los valores de los campos personalizados 'cmb_field_map'
-        $latitude = $cmb2->get_value('latitude', 'cmb_field_map');
-        $longitude = $cmb2->get_value('longitude', 'cmb_field_map');
+function mi_funcion_personalizada_despues_de_guardar( $post_id, $cmb2, $updated_data ) {
+	// Verifica si los campos personalizados del grupo de campos 'cmb_field_map' se guardaron o actualizaron
+	if ( $cmb2->has_group( 'cmb_field_map' ) ) {
+		// Obtiene los valores de los campos personalizados 'cmb_field_map'
+		$latitude  = $cmb2->get_value( 'latitude', 'cmb_field_map' );
+		$longitude = $cmb2->get_value( 'longitude', 'cmb_field_map' );
 
-        // Llama a la API de geocodificación inversa para obtener el nombre de la ciudad
-        $api_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&key=AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs";
+		// Llama a la API de geocodificación inversa para obtener el nombre de la ciudad
+		$api_url = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitude},{$longitude}&key=AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs";
 
-        $response = wp_remote_get($api_url);
+		$response = wp_remote_get( $api_url );
 
-        if (!is_wp_error($response)) {
-            $body = wp_remote_retrieve_body($response);
-            $data = json_decode($body);
+		if ( ! is_wp_error( $response ) ) {
+			$body = wp_remote_retrieve_body( $response );
+			$data = json_decode( $body );
 
-            // Verifica si la respuesta tiene resultados
-            if ($data && isset($data->results[0]) && isset($data->results[0]->address_components)) {
-                foreach ($data->results[0]->address_components as $component) {
-                    if (in_array('locality', $component->types)) {
-                        // Obtiene el nombre de la ciudad
-                        $city_name = $component->long_name;
-                        break;
-                    }
-                }
+			// Verifica si la respuesta tiene resultados
+			if ( $data && isset( $data->results[0] ) && isset( $data->results[0]->address_components ) ) {
+				foreach ( $data->results[0]->address_components as $component ) {
+					if ( in_array( 'locality', $component->types ) ) {
+						// Obtiene el nombre de la ciudad
+						$city_name = $component->long_name;
+						break;
+					}
+				}
 
-                if (!empty($city_name)) {
-                    // Actualiza un campo personalizado con el nombre de la ciudad
-                    update_post_meta($post_id, 'nombre_ciudad', $city_name);
-                } else {
-                    echo 'Ciudad no encontrada';
-                }
-            } else {
-                echo 'No se encontraron resultados de geocodificación';
-            }
-        } else {
-            echo 'Error al llamar a la API de geocodificación';
-        }
-    }
+				if ( ! empty( $city_name ) ) {
+					// Actualiza un campo personalizado con el nombre de la ciudad
+					update_post_meta( $post_id, 'nombre_ciudad', $city_name );
+				} else {
+					echo 'Ciudad no encontrada';
+				}
+			} else {
+				echo 'No se encontraron resultados de geocodificación';
+			}
+		} else {
+			echo 'Error al llamar a la API de geocodificación';
+		}
+	}
 }
 
-add_action('cmb2_save_post_fields', 'mi_funcion_personalizada_despues_de_guardar', 10, 3);
+add_action( 'cmb2_save_post_fields', 'mi_funcion_personalizada_despues_de_guardar', 10, 3 );
 
 function obtener_numero_total_autos_nuevos() {
-    
-    $args = array(
-        'post_type' => 'cars', 
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'condition',
-                'field'    => 'slug',
-                'terms'    => 'nuevo', 
-            ),
-        ),
-        'posts_per_page' => -1, 
-    );
 
-    // Realizar la consulta de WordPress
-    $autos_nuevos_query = new WP_Query($args);
+	$args = array(
+		'post_type'      => 'cars',
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'condition',
+				'field'    => 'slug',
+				'terms'    => 'nuevo',
+			),
+		),
+		'posts_per_page' => -1,
+	);
 
-    // Obtener el número total de autos nuevos
-    $numero_total_autos_nuevos = $autos_nuevos_query->found_posts;
+	// Realizar la consulta de WordPress
+	$autos_nuevos_query = new WP_Query( $args );
 
-    // Retornar el número total como resultado
-    return $numero_total_autos_nuevos;
+	// Obtener el número total de autos nuevos
+	$numero_total_autos_nuevos = $autos_nuevos_query->found_posts;
+
+	// Retornar el número total como resultado
+	return $numero_total_autos_nuevos;
 }
 
 function obtener_numero_total_autos_semi_nuevos() {
-    
-    $args = array(
-        'post_type' => 'cars', 
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'condition',
-                'field'    => 'slug',
-                'terms'    => 'semi-nuevo', 
-            ),
-        ),
-        'posts_per_page' => -1, 
-    );
 
-    // Realizar la consulta de WordPress
-    $autos_semi_nuevos_query = new WP_Query($args);
+	$args = array(
+		'post_type'      => 'cars',
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'condition',
+				'field'    => 'slug',
+				'terms'    => 'semi-nuevo',
+			),
+		),
+		'posts_per_page' => -1,
+	);
 
-    // Obtener el número total de autos nuevos
-    $numero_total_autos_semi_nuevos = $autos_semi_nuevos_query->found_posts;
+	// Realizar la consulta de WordPress
+	$autos_semi_nuevos_query = new WP_Query( $args );
 
-    // Retornar el número total como resultado
-    return $numero_total_autos_semi_nuevos;
+	// Obtener el número total de autos nuevos
+	$numero_total_autos_semi_nuevos = $autos_semi_nuevos_query->found_posts;
+
+	// Retornar el número total como resultado
+	return $numero_total_autos_semi_nuevos;
 }
 
 function obtener_numero_total_autos_usados() {
-    
-    $args = array(
-        'post_type' => 'cars', 
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'condition',
-                'field'    => 'slug',
-                'terms'    => 'usado', 
-            ),
-        ),
-        'posts_per_page' => -1, 
-    );
 
-    // Realizar la consulta de WordPress
-    $autos_usados_query = new WP_Query($args);
+	$args = array(
+		'post_type'      => 'cars',
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'condition',
+				'field'    => 'slug',
+				'terms'    => 'usado',
+			),
+		),
+		'posts_per_page' => -1,
+	);
 
-    // Obtener el número total de autos 
-    $numero_total_autos_usados = $autos_usados_query->found_posts;
+	// Realizar la consulta de WordPress
+	$autos_usados_query = new WP_Query( $args );
 
-    // Retornar el número total como resultado
-    return $numero_total_autos_usados;
+	// Obtener el número total de autos
+	$numero_total_autos_usados = $autos_usados_query->found_posts;
+
+	// Retornar el número total como resultado
+	return $numero_total_autos_usados;
 }
 // Función para manejar el formulario
 function submit_car_listing_handler() {
-    if (isset($_POST['action']) && $_POST['action'] === 'submit_car_listing') {
-        $post_title = sanitize_text_field($_POST['marca'] . ' ' . $_POST['modelo']);
-        $post_content = wp_kses_post($_POST['descripcion']);
+	if ( isset( $_POST['action'] ) && $_POST['action'] === 'submit_car_listing' ) {
+		$post_title   = sanitize_text_field( $_POST['marca'] . ' ' . $_POST['modelo'] );
+		$post_content = wp_kses_post( $_POST['descripcion'] );
 
-        // Asegurarse de registrar el tipo de post personalizado "cars" previamente
+		// Asegurarse de registrar el tipo de post personalizado "cars" previamente
 
-        $transmision = isset($_POST['transmision']) ? implode(', ', $_POST['transmision']) : '';
+		$transmision = isset( $_POST['transmision'] ) ? implode( ', ', $_POST['transmision'] ) : '';
 
-        $new_post = array(
-            'post_title'   => $post_title,
-            'post_content' => $post_content,
-            'post_status'  => 'publish',
-            'post_type'    => 'cars' // cars
-        );
+		$new_post = array(
+			'post_title'   => $post_title,
+			'post_content' => $post_content,
+			'post_status'  => 'publish',
+			'post_type'    => 'cars', // cars
+		);
 
-        // new post
-        $post_id = wp_insert_post($new_post);
+		// new post
+		$post_id = wp_insert_post( $new_post );
 
-        if ($post_id) {
-            // metadata
-            update_post_meta($post_id, 'marca', sanitize_text_field($_POST['marca']));
-            update_post_meta($post_id, 'modelo', sanitize_text_field($_POST['modelo']));
-            update_post_meta($post_id, 'color', sanitize_text_field($_POST['color']));
-            update_post_meta($post_id, 'anio_modelo', sanitize_text_field($_POST['anio_modelo']));
-            update_post_meta($post_id, 'ciudad', sanitize_text_field($_POST['ciudad']));
-            update_post_meta($post_id, 'transmision', $transmision);
-            update_post_meta($post_id, 'precio', floatval($_POST['precio']));
+		if ( $post_id ) {
+			// metadata
+			update_post_meta( $post_id, 'marca', sanitize_text_field( $_POST['marca'] ) );
+			update_post_meta( $post_id, 'modelo', sanitize_text_field( $_POST['modelo'] ) );
+			update_post_meta( $post_id, 'color', sanitize_text_field( $_POST['color'] ) );
+			update_post_meta( $post_id, 'anio_modelo', sanitize_text_field( $_POST['anio_modelo'] ) );
+			update_post_meta( $post_id, 'ciudad', sanitize_text_field( $_POST['ciudad'] ) );
+			update_post_meta( $post_id, 'transmision', $transmision );
+			update_post_meta( $post_id, 'precio', floatval( $_POST['precio'] ) );
 
-            // Subir y adjuntar la imagen al post
-            if ($_FILES['imagen']['tmp_name']) {
-                $upload = wp_upload_bits($_FILES['imagen']['name'], null, file_get_contents($_FILES['imagen']['tmp_name']));
-                if (isset($upload['error']) && $upload['error'] != 0) {
-                    echo "Hubo un error al subir la imagen.";
-                } else {
-                    $image_path = $upload['file'];
-                    $file_type = wp_check_filetype(basename($image_path), null);
-                    $attachment = array(
-                        'post_mime_type' => $file_type['type'],
-                        'post_title' => $post_title,
-                        'post_content' => '',
-                        'post_status' => 'inherit'
-                    );
-                    $attachment_id = wp_insert_attachment($attachment, $image_path, $post_id);
-                    require_once(ABSPATH . 'wp-admin/includes/image.php');
-                    $attachment_data = wp_generate_attachment_metadata($attachment_id, $image_path);
-                    wp_update_attachment_metadata($attachment_id, $attachment_data);
-                    set_post_thumbnail($post_id, $attachment_id);
-                }
-            }
+			// Subir y adjuntar la imagen al post
+			if ( $_FILES['imagen']['tmp_name'] ) {
+				$upload = wp_upload_bits( $_FILES['imagen']['name'], null, file_get_contents( $_FILES['imagen']['tmp_name'] ) );
+				if ( isset( $upload['error'] ) && $upload['error'] != 0 ) {
+					echo 'Hubo un error al subir la imagen.';
+				} else {
+					$image_path    = $upload['file'];
+					$file_type     = wp_check_filetype( basename( $image_path ), null );
+					$attachment    = array(
+						'post_mime_type' => $file_type['type'],
+						'post_title'     => $post_title,
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					);
+					$attachment_id = wp_insert_attachment( $attachment, $image_path, $post_id );
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+					$attachment_data = wp_generate_attachment_metadata( $attachment_id, $image_path );
+					wp_update_attachment_metadata( $attachment_id, $attachment_data );
+					set_post_thumbnail( $post_id, $attachment_id );
+				}
+			}
 
-            echo "¡El post de tipo 'cars' se creó exitosamente! Puedes verlo <a href='" . get_permalink($post_id) . "'>aquí</a>.";
-        } else {
-            echo "Hubo un error al crear el post.";
-        }
-    }
+			echo "¡El post de tipo 'cars' se creó exitosamente! Puedes verlo <a href='" . get_permalink( $post_id ) . "'>aquí</a>.";
+		} else {
+			echo 'Hubo un error al crear el post.';
+		}
+	}
 }
 
 // Registra la acción para manejar el formulario
-add_action('admin_post_submit_car_listing', 'submit_car_listing_handler');
-add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler');
+add_action( 'admin_post_submit_car_listing', 'submit_car_listing_handler' );
+add_action( 'admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler' );
 
 /**
  * Enqueue scripts and styles.
@@ -324,40 +324,43 @@ add_action('admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler')
 function multi_carros_scripts() {
 
 	wp_enqueue_style( 'multi-carros-style', get_stylesheet_uri(), array(), MULTI_CARROS_VERSION );
-	wp_enqueue_style( 'bootstrap',get_template_directory_uri(). '/assets/css/bootstrap.min.css', array(),'4.6.0');
-	wp_enqueue_style( 'themify-icons',get_template_directory_uri(). '/assets/fonts/themify-icons/themify-icons.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'flaticon',get_template_directory_uri(). '/assets/fonts/flaticon/flaticon.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'magnific-popup',get_template_directory_uri(). '/assets/css/magnific-popup.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'slick',get_template_directory_uri(). '/assets/css/slick.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'nice-select',get_template_directory_uri(). '/assets/css/nice-select.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'jquery-ui',get_template_directory_uri(). '/assets/css/jquery-ui.min.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'animate',get_template_directory_uri(). '/assets/css/animate.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'default',get_template_directory_uri(). '/assets/css/default.css', array(),MULTI_CARROS_VERSION);
-	wp_enqueue_style( 'style-fioxen',get_template_directory_uri(). '/assets/css/style.css', array(),MULTI_CARROS_VERSION);
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/assets/css/bootstrap.min.css', array(), '4.6.0' );
+	wp_enqueue_style( 'themify-icons', get_template_directory_uri() . '/assets/fonts/themify-icons/themify-icons.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'flaticon', get_template_directory_uri() . '/assets/fonts/flaticon/flaticon.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'magnific-popup', get_template_directory_uri() . '/assets/css/magnific-popup.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'slick', get_template_directory_uri() . '/assets/css/slick.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'nice-select', get_template_directory_uri() . '/assets/css/nice-select.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'jquery-ui', get_template_directory_uri() . '/assets/css/jquery-ui.min.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'animate', get_template_directory_uri() . '/assets/css/animate.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'default', get_template_directory_uri() . '/assets/css/default.css', array(), MULTI_CARROS_VERSION );
+	wp_enqueue_style( 'style-fioxen', get_template_directory_uri() . '/assets/css/style.css', array(), MULTI_CARROS_VERSION );
 	wp_style_add_data( 'multi-carros-style', 'rtl', 'replace' );
 
 	wp_enqueue_script( 'multi-carros-navigation', get_template_directory_uri() . '/js/navigation.js', array(), MULTI_CARROS_VERSION, true );
-	wp_enqueue_script('jquery');
-	wp_enqueue_script('popper', get_template_directory_uri().'/assets/js/popper.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('bootstrap', get_template_directory_uri().'/assets/js/bootstrap.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('slick', get_template_directory_uri().'/assets/js/slick.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-magnific-popup', get_template_directory_uri().'/assets/js/jquery.magnific-popup.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('isotope', get_template_directory_uri().'/assets/js/isotope.pkgd.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('imagesloaded', get_template_directory_uri().'/assets/js/imagesloaded.pkgd.min.js', array(),MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('jquery-nice-select', get_template_directory_uri().'/assets/js/jquery.nice-select.min.js', array(), MULTI_CARROS_VERSION, true);
-	wp_enqueue_script('counterup', get_template_directory_uri().'/assets/js/jquery.counterup.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-waypoints', get_template_directory_uri().'/assets/js/jquery.waypoints.js', array(),MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('jquery-ui ', get_template_directory_uri().'/assets/js/jquery-ui.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('wow', get_template_directory_uri().'/assets/js/wow.min.js', array(), MULTI_CARROS_VERSION,true);
-	wp_enqueue_script('main-fioxen', get_template_directory_uri().'/assets/js/main.js', array(), MULTI_CARROS_VERSION,true);
-	
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'popper', get_template_directory_uri() . '/assets/js/popper.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/assets/js/bootstrap.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'slick', get_template_directory_uri() . '/assets/js/slick.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'jquery-magnific-popup', get_template_directory_uri() . '/assets/js/jquery.magnific-popup.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'isotope', get_template_directory_uri() . '/assets/js/isotope.pkgd.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'imagesloaded', get_template_directory_uri() . '/assets/js/imagesloaded.pkgd.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'jquery-nice-select', get_template_directory_uri() . '/assets/js/jquery.nice-select.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'counterup', get_template_directory_uri() . '/assets/js/jquery.counterup.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'jquery-waypoints', get_template_directory_uri() . '/assets/js/jquery.waypoints.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'jquery-ui ', get_template_directory_uri() . '/assets/js/jquery-ui.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'wow', get_template_directory_uri() . '/assets/js/wow.min.js', array(), MULTI_CARROS_VERSION, true );
+	wp_enqueue_script( 'main-fioxen', get_template_directory_uri() . '/assets/js/main.js', array(), MULTI_CARROS_VERSION, true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
-	wp_localize_script( 'main-fioxen','cars',array(
-		'ajaxurl' => admin_url( 'admin-ajax.php' ),
-	) );
+	wp_localize_script(
+		'main-fioxen',
+		'cars',
+		array(
+			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+		)
+	);
 }
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
 

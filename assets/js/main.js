@@ -400,149 +400,25 @@
       $("#slider-range").slider("values", 1)
   );
 
-  // Selector de categorias con ajax se asigna el selector
-// Selector de taxonomias con ajax muestra los resultados de marca de carro
-$("#cars-brand-selector").change(function () {
-  console.log("Brand seleccionado: " + $(this).find(":selected").val());
-
-  $.ajax({
-      url: cars.ajaxurl,
-      method: "POST",
-      data: {
-          action: "filtrar_carros_por_marca",
-          brand: $(this).find(":selected").val(),
-      },
-      beforeSend: function () {
-          $("#listing-cars").html("Cargando");
-      },
-
-      success: function (data) {
-          console.log(data);
-          let cars_grid_html = "";
-          data.forEach((element) => {
-              cars_grid_html += `<div class="col-md-6 col-sm-12">
-                  <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                      <div class="listing-thumbnail">
-                      <img src="${element.post_thumbnail_url}"></img>
-                          <span class="featured-btn">${element.estado}</span>
-                      </div>
-                      <div class="listing-content">
-                          <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                          <div class="listing-meta">
-                          <ul>
-                          <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                          <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
-              </div>`;
-          });
-          $("#listing-cars").html(cars_grid_html);
-      },
-
-      error: function (textStatus, errorThrown) {
-          console.log("Error en la solicitud AJAX:", textStatus, errorThrown);
-      },
-  });
-});
-
 // Selector de taxonomias con ajax muestra los resultados de combustible
-$("#cars-fuel-selector").change(function () {
-  console.log($(this).find(":selected").val());
+
+$('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-type_car-selector').change(function () {
+      // Obtén los valores de los selectores de categorías
+      const selectedBrand = $('#cars-brand-selector').val();
+      const selectedFuel = $('#cars-fuel-selector').val();
+      const selectedCondition = $('#cars-condition-selector').val();
+      const selectedTypeCar = $('#cars-type_car-selector').val();
   $.ajax({
       url: cars.ajaxurl,
       method: "POST",
       data: {
-          action: "filtrar_por_combustible",
-          fuel: $(this).find(":selected").val(),
+          action: "filtrar_por_categoria",
+          brand: selectedBrand,
+          fuel: selectedFuel,
+          condition: selectedCondition,
+          type_car: selectedTypeCar,
       },
-      beforeSend: function () {
-          $("#listing-cars").html("Cargando");
-      },
-
-      success: function (data) {
-          console.log(data);
-          let cars_grid_html = "";
-          data.forEach((element) => {
-            cars_grid_html += `<div class="col-md-6 col-sm-12">
-            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                <div class="listing-thumbnail">
-                <img src="${element.post_thumbnail_url}"></img>
-                    <span class="featured-btn">${element.estado}</span>
-                </div>
-                <div class="listing-content">
-                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                    <div class="listing-meta">
-                    <ul>
-                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-          });
-          $("#listing-cars").html(cars_grid_html);
-      },
-
-      error: function (error) {
-          console.log(error);
-      },
-  });
-});
-
-$("#cars-condition-selector").change(function () {
-  $.ajax({
-      url: cars.ajaxurl,
-      method: "POST",
-      data: {
-          action: "filtrar_por_condicion",
-          condition: $(this).find(":selected").val(),
-      },
-      beforeSend: function () {
-          $("#listing-cars").html("Cargando");
-      },
-
-      success: function (data) {
-          console.log(data);
-          let cars_grid_html = "";
-          data.forEach((element) => {
-            cars_grid_html += `<div class="col-md-6 col-sm-12">
-            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                <div class="listing-thumbnail">
-                <img src="${element.post_thumbnail_url}"></img>
-                    <span class="featured-btn">${element.estado}</span>
-                </div>
-                <div class="listing-content">
-                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                    <div class="listing-meta">
-                    <ul>
-                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>`;
-          });
-          $("#listing-cars").html(cars_grid_html);
-      },
-
-      error: function (error) {
-          console.log(error);
-      },
-  });
-});
-
-$("#cars-type_car-selector").change(function () {
-  $.ajax({
-      url: cars.ajaxurl,
-      method: "POST",
-      data: {
-          action: "filtrar_por_tipo_car",
-          type_car: $(this).find(":selected").val(),
-      },
+      
       beforeSend: function () {
           $("#listing-cars").html("Cargando");
       },

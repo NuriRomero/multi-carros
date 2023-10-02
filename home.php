@@ -18,12 +18,12 @@ get_header();
 	<main id="primary" class="site-main">
 
 		<?php
-        $cars = get_cars( 10 );
-        if($cars->have_posts(  )):
-                the_post(  );
-                get_template_part( 'template-parts/sell-page/cars', 'listing' );
-        endif;
-        ?>
+		$cars = get_cars( 10 );
+		if ( $cars->have_posts() ) :
+				the_post();
+				get_template_part( 'template-parts/sell-page/cars', 'listing' );
+		endif;
+		?>
 	</main>
 
 <?php
