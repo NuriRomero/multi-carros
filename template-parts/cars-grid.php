@@ -17,29 +17,42 @@
 			<h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 			<div class="listing-meta">
 				<ul>
-					<li><span><i class="ti-location-pin"></i>
 					<?php
-					// Verifica si hay datos válidos
-					// Obtén los datos del campo pw_map
-						$location_data = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
+					$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
+					if ( $location ) {
+						$api_key  = 'AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs'; // Reemplaza con tu propia API Key
+						$latitud  = $location['latitude'];
+						$longitud = $location['longitude'];
+						$url      = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitud},{$longitud}&key={$api_key}";
+						$response = wp_remote_get( $url );
 
-						// Verifica si hay datos válidos
-					if ( ! empty( $location_data ) && is_array( $location_data ) ) {
-						// Verifica si existen las claves 'longitude' y 'latitude'
-						if ( isset( $location_data['longitude'] ) && isset( $location_data['latitude'] ) ) {
-							$longitude = $location_data['longitude'];
-							$latitude  = $location_data['latitude'];
-
-							// Ahora puedes utilizar $longitude y $latitude según tus necesidades
-							echo 'Longitud: ' . $longitude;
-							echo 'Latitud: ' . $latitude;
+						if ( is_wp_error( $response ) ) {
+							echo 'Error al obtener la información de geolocalización.';
 						} else {
-							echo 'Datos de ubicación incompletos';
+							$body = wp_remote_retrieve_body( $response );
+							$data = json_decode( $body );
+
+							if ( $data->status === 'OK' ) {
+								$direccion = $data->results[0]->formatted_address;
+								$ciudad    = '';
+								foreach ( $data->results[0]->address_components as $component ) {
+									if ( in_array( 'locality', $component->types ) ) {
+										$ciudad = $component->long_name;
+										break;
+									}
+								}
+
+								echo '<li><span><i class="ti-location-pin"></i>';
+								
+								echo  $ciudad;
+								echo '</span></li>';
+							} else {
+								echo 'No se pudo obtener la información de geolocalización.';
+							}
 						}
 					} else {
-						echo 'Datos de ubicación no disponibles';
+						echo 'No se han proporcionado valores de latitud y longitud.';
 					}
-
 					?>
 					</span></li>
 				</ul>
