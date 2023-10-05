@@ -314,6 +314,11 @@ function submit_car_listing_handler() {
 	}
 }
 
+function load_jquery() {
+    wp_enqueue_script('jquery');
+}
+add_action('wp_enqueue_scripts', 'load_jquery');
+
 // Registra la acción para manejar el formulario
 add_action( 'admin_post_submit_car_listing', 'submit_car_listing_handler' );
 add_action( 'admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler' );

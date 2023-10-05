@@ -22,7 +22,21 @@
 										  
 											<h3 class="title"><?php the_title(); ?></h3>
 											<div class="listing-meta">
-												<ul>
+												<ul><?php
+													$location = get_post_meta(get_the_ID(), 'main_information_metabox_ciudad', true);
+
+													if (is_array($location) && !empty($location)) {
+														echo '<ul>'; // Iniciar una lista HTML (puedes usar un elemento diferente si lo prefieres)
+														
+														foreach ($location as $city) {
+															echo '<li>' . esc_html($city) . '</li>'; // Imprimir cada elemento del array como un elemento de lista
+														}
+													
+														echo '</ul>'; // Cerrar la lista HTML
+													} else {
+														echo 'Ciudad no especificada'; // Mensaje predeterminado en caso de que el campo esté vacío o no sea un array
+													}
+													?>
 													<?php
 													$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
 													if ( $location ) {

@@ -410,13 +410,13 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
       const selectedTypeCar = $('#cars-type_car-selector').val();
   $.ajax({
       url: cars.ajaxurl,
-      method: "POST",
+      type: "POST",
       data: {
           action: "filtrar_por_categoria",
-          brand: selectedBrand,
-          fuel: selectedFuel,
-          condition: selectedCondition,
-          type_car: selectedTypeCar,
+          'cars-brand-selector': selectedBrand,
+          'cars-fuel-selector': selectedFuel,
+          'cars-condition-selector': selectedCondition,
+          'cars-type_car-selector': selectedTypeCar
       },
       
       beforeSend: function () {

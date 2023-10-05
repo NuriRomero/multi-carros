@@ -29,14 +29,7 @@ if ( $cars->have_posts() ) :
 			<div class="col-lg-4 col-md-6 col-sm-12">
 				<div class="listing-item listing-grid-item-two">
 					<div class="listing-thumbnail">
-						<?php
-						$image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
-						if ( $image_url ) {
-							echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
-						} else {
-							echo 'No se ha proporcionado una imagen válida.';
-						}
-						?>
+						<?php the_post_thumbnail('car_size_photo');?>
 						<span class="featured-btn"></i><?php echo ! empty( $terms = wp_get_post_terms( get_the_ID(), 'condition' ) ) ? esc_html( $terms[0]->name ) : 'Condicion no especificada'; ?>
 						</span>
 						</li></span>
@@ -49,7 +42,7 @@ if ( $cars->have_posts() ) :
 						</h3>
 						<div class="listing-meta">
 							<ul>
-								<?php
+							    <?php
 								$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
 								if ( $location ) {
 									$api_key  = 'AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs'; // Reemplaza con tu propia API Key
