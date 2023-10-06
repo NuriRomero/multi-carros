@@ -426,27 +426,36 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
       success: function (data) {
           console.log(data);
           let cars_grid_html = "";
-          data.forEach((element) => {
-            cars_grid_html += `<div class="col-md-6 col-sm-12">
-            <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                <div class="listing-thumbnail">
-                <img src="${element.post_thumbnail_url}"></img>
-                    <span class="featured-btn">${element.estado}</span>
-                </div>
-                <div class="listing-content">
-                    <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                    <div class="listing-meta">
-                    <ul>
-                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
-                        </ul>
+          if (Array.isArray(data) && data.length > 0) {
+            // Si data es un array con elementos, muestra los resultados
+            data.forEach((element) => {
+                cars_grid_html += `<div class="col-md-6 col-sm-12">
+                    <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                        <div class="listing-thumbnail">
+                            <img src="${element.post_thumbnail_url}"></img>
+                            <span class="featured-btn">${element.estado}</span>
+                        </div>
+                        <div class="listing-content">
+                            <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                            <div class="listing-meta">
+                                <ul>
+                                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>`;
-          });
-          $("#listing-cars").html(cars_grid_html);
-      },
+                </div>`;
+            });
+          } else {// Si data no es un array o está vacío, muestra el mensaje de "No se encontraron resultados"
+          
+            cars_grid_html = `<div class="col-md-12">
+                <p>No se encontraron resultados con las características seleccionadas.</p>
+            </div>`;
+          }
+
+    $("#listing-cars").html(cars_grid_html);
+},
 
       error: function (error) {
           console.log(error);

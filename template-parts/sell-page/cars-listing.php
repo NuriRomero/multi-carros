@@ -30,7 +30,7 @@ if ( $cars->have_posts() ) :
 						<div class="listing-item listing-grid-one mb-45 wow fadeInUp" dta-wow-delay="10ms">
 							<div class="listing-thumbnail">
 							<?php
-								$image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
+								$image_url = the_post_thumbnail( get_the_ID(), 'car_size_photo' );
 							if ( $image_url ) {
 								echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
 							} else {
@@ -55,41 +55,8 @@ if ( $cars->have_posts() ) :
 								<div class="listing-meta">
 									<ul>
 									<?php
-									$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
-									if ( $location ) {
-										$api_key  = 'AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs'; // Reemplaza con tu propia API Key
-										$latitud  = $location['latitude'];
-										$longitud = $location['longitude'];
-										$url      = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitud},{$longitud}&key={$api_key}";
-										$response = wp_remote_get( $url );
-
-										if ( is_wp_error( $response ) ) {
-											echo 'Error al obtener la información de geolocalización.';
-										} else {
-											$body = wp_remote_retrieve_body( $response );
-											$data = json_decode( $body );
-
-											if ( $data->status === 'OK' ) {
-												$direccion = $data->results[0]->formatted_address;
-												$ciudad    = '';
-												foreach ( $data->results[0]->address_components as $component ) {
-													if ( in_array( 'locality', $component->types ) ) {
-														$ciudad = $component->long_name;
-														break;
-													}
-												}
-
-												echo '<li><span><i class="ti-location-pin"></i>';
-												echo 'Dirección: ' . $direccion . '<br>';
-												echo 'Ciudad: ' . $ciudad;
-												echo '</span></li>';
-											} else {
-												echo 'No se pudo obtener la información de geolocalización.';
-											}
-										}
-									} else {
-										echo 'No se han proporcionado valores de latitud y longitud.';
-									}
+									$location = get_post_meta( get_the_ID(), 'administrative_area_level_1', true );
+									
 									?>
 										
 									</ul>

@@ -30,7 +30,7 @@ get_header();
 									<div class="form_group cars-categories" id="filtro-multiple">
 										<!-- brand selector  -->
 										<select class="wide" id="cars-brand-selector" class="filtro-select">
-											<option data-display="Todas las marcas">Todas las marcas</option>
+											<option data-display="Todas las marcas" value="Mostrar Todas">Todas las marcas</option>
 											<?php
 											$args       = array(
 												'orderby' => 'name',
@@ -46,7 +46,7 @@ get_header();
 
 										<!-- fuel selector  -->
 										<select class="wide" id="cars-fuel-selector" class="filtro-select">
-											<option data-dsplay="Todos los tipos de combustibles">Todos los tipos de
+											<option data-display="Todos los tipos de combustibles" value="Mostrar Todas">Todos los tipos de
 												combustible</option>
 											<?php
 											$args      = array(
@@ -63,7 +63,7 @@ get_header();
 
 										<!-- condition selector  -->
 										<select class="wide" id="cars-condition-selector" class="filtro-select">
-											<option data-dsplay="Todos las condiciones de autos">Todas las condiciones
+											<option data-display="Todos las condiciones de autos" value="Mostrar Todas">Todas las condiciones
 												de autos</option>
 											<?php
 											$args           = array(
@@ -79,7 +79,7 @@ get_header();
 										</select>
 										<!-- type_car selector  -->
 										<select class="wide" id="cars-type_car-selector" class="filtro-select">
-											<option data-dsplay="Todos los estados">Todas los tipos de auto</option>
+											<option data-display="Todos los tipos de auto" value="Mostrar Todas" >Todas los tipos de auto</option>
 											<?php
 											$args       = array(
 												'orderby' => 'name',
@@ -111,59 +111,6 @@ get_header();
 						</div>
 					</div>
 					<div class="row listing-grid-wrapper" id="listing-cars">
-						<?php 
-						
-						$term_slugs = array(
-							'brand' => 'Chevrolet',       // Término "Toyota" en la taxonomía "brand"
-							'fuel' => 'Gasolina',     // Término "Gasoline" en la taxonomía "fuel"
-							'condition' => 'Usado', // Término "Excellent" en la taxonomía "condition"
-							'type_car' => 'Camioneta pickup', // Término "Excellent" en la taxonomía "condition"
-							);
-							// Realizamos una consulta para encontrar posts que cumplan con todas las condiciones
-							$query = new WP_Query(array(
-							'post_type' => 'cars', // Tipo de post "cars"
-							'tax_query' => array(
-								'relation' => 'AND', // Relación "AND" para asegurarnos de que cumpla con todas las condiciones
-								// Agregamos las condiciones de taxonomía
-								array(
-									'taxonomy' => 'brand',
-									'field' => 'slug',
-									'terms' => $term_slugs['brand'],
-								),
-								array(
-									'taxonomy' => 'fuel',
-									'field' => 'slug',
-									'terms' => $term_slugs['fuel'],
-								),
-								array(
-									'taxonomy' => 'condition',
-									'field' => 'slug',
-									'terms' => $term_slugs['condition'],
-								),
-								array(
-									'taxonomy' => 'type_car',
-									'field' => 'slug',
-									'terms' => $term_slugs['type_car'],
-								),
-							),
-							));
-							// Verificamos si hay posts que cumplan con todas las condiciones
-							if ($query->have_posts()) {
-							echo 'Los siguientes posts cumplen con todas las condiciones:';
-							while ($query->have_posts()) {
-								$query->the_post();
-								echo '<br>';
-								echo 'Título: ' . get_the_title();
-								echo '<br>';
-								echo 'URL: ' . get_permalink();
-								echo '<br>';
-								// Agrega más detalles del post según sea necesario
-							}
-							wp_reset_postdata(); // Restauramos los datos del post
-							} else {
-							echo 'Ningún post cumple con todas las condiciones.';
-							}
-						?>
 						<?php
 						if ( have_posts() ) :
 							$count = 0; // Contador para las columnas
@@ -176,7 +123,7 @@ get_header();
 								<?php get_template_part( 'template-parts/cars', 'grid' ); ?>
 						</div>
 								<?php
-								if ( $count % 3 == 0 ) {
+								if ( $count % 4 == 0 ) {
 									echo '</div><div class="row listing-grid-wrapper">';
 								}
 							endwhile;
@@ -192,59 +139,7 @@ get_header();
 	<!--====== End Listing Section ======-->
 
 </main><!-- #main -->
-<script>
-	// Obtener los valores seleccionados de los selectores
-var selectedBrand = document.getElementById("cars-brand-selector").value;
-var selectedFuel = document.getElementById("cars-fuel-selector").value;
-var selectedCondition = document.getElementById("cars-condition-selector").value;
-var selectedTypeCar = document.getElementById("cars-type_car-selector").value;
 
-// Crear un objeto de consulta de WordPress (WP_Query)
-var queryArgs = {
-  'post_type': 'cars', // Tipo de post 'cars'
-  'posts_per_page': -1, // Mostrar todos los resultados
-  'tax_query': {
-    'relation': 'AND', // Relación "AND" para asegurarse de que cumpla con todas las condiciones
-    'brand': {
-      'taxonomy': 'brand',
-      'field': 'slug',
-      'terms': selectedBrand
-    },
-    'fuel': {
-      'taxonomy': 'fuel',
-      'field': 'slug',
-      'terms': selectedFuel
-    },
-    'condition': {
-      'taxonomy': 'condition',
-      'field': 'slug',
-      'terms': selectedCondition
-    },
-    'type_car': {
-      'taxonomy': 'type_car',
-      'field': 'slug',
-      'terms': selectedTypeCar
-    }
-  }
-};
-
-// Realizar la consulta de WordPress
-var carQuery = new WP_Query(queryArgs);
-
-// Verificar si hay carros que cumplan con las condiciones
-if (carQuery.have_posts()) {
-  console.log('Los siguientes carros cumplen con todas las condiciones:');
-  while (carQuery.have_posts()) {
-    carQuery.next_post();
-    console.log('Título: ' + carQuery.post.title);
-    console.log('URL: ' + carQuery.post.permalink);
-    // Agregar más detalles del carro según sea necesario
-  }
-} else {
-  console.log('Ningún carro cumple con todas las condiciones.');
-}
-
-</script>
 
 <?php
 get_footer();

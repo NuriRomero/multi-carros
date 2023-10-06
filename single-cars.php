@@ -14,7 +14,7 @@ get_header();
 while ( have_posts() ) :
 	the_post();
 	// Mostrar título y contenido del carro
-	printf( '<pre>%s</pre>', var_export( get_post_custom( get_the_ID(  ) ), true ) );
+	// printf( '<pre>%s</pre>', var_export( get_post_custom( get_the_ID(  ) ), true ) );
 
 	the_content();
 	get_template_part( 'template-parts/single-page/section', 'details' );

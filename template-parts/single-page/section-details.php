@@ -22,57 +22,10 @@
 										  
 											<h3 class="title"><?php the_title(); ?></h3>
 											<div class="listing-meta">
-												<ul><?php
-													$location = get_post_meta(get_the_ID(), 'main_information_metabox_ciudad', true);
-
-													if (is_array($location) && !empty($location)) {
-														echo '<ul>'; // Iniciar una lista HTML (puedes usar un elemento diferente si lo prefieres)
-														
-														foreach ($location as $city) {
-															echo '<li>' . esc_html($city) . '</li>'; // Imprimir cada elemento del array como un elemento de lista
-														}
-													
-														echo '</ul>'; // Cerrar la lista HTML
-													} else {
-														echo 'Ciudad no especificada'; // Mensaje predeterminado en caso de que el campo esté vacío o no sea un array
-													}
-													?>
+												<ul>
 													<?php
-													$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
-													if ( $location ) {
-														$api_key  = 'AIzaSyAiB8jZxGdD-xHPvnKLCc6m7WeyWldSUBs'; // Reemplaza con tu propia API Key
-														$latitud  = $location['latitude'];
-														$longitud = $location['longitude'];
-														$url      = "https://maps.googleapis.com/maps/api/geocode/json?latlng={$latitud},{$longitud}&key={$api_key}";
-														$response = wp_remote_get( $url );
-
-														if ( is_wp_error( $response ) ) {
-															echo 'Error al obtener la información de geolocalización.';
-														} else {
-															$body = wp_remote_retrieve_body( $response );
-															$data = json_decode( $body );
-
-															if ( $data->status === 'OK' ) {
-																$direccion = $data->results[0]->formatted_address;
-																$ciudad    = '';
-																foreach ( $data->results[0]->address_components as $component ) {
-																	if ( in_array( 'locality', $component->types ) ) {
-																		$ciudad = $component->long_name;
-																		break;
-																	}
-																}
-
-																echo '<li><span><i class="ti-location-pin"></i>';
-																echo 'Dirección: ' . $direccion . '<br>';
-																echo 'Ciudad: ' . $ciudad;
-																echo '</span></li>';
-															} else {
-																echo 'No se pudo obtener la información de geolocalización.';
-															}
-														}
-													} else {
-														echo 'No se han proporcionado valores de latitud y longitud.';
-													}
+													echo $location = get_post_meta( get_the_ID(), 'formatted_address', true );
+													
 													?>
 												</ul>
 											</div>
