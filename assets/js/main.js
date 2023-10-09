@@ -429,7 +429,7 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
           if (Array.isArray(data) && data.length > 0) {
             // Si data es un array con elementos, muestra los resultados
             data.forEach((element) => {
-                cars_grid_html += `<div class="col-md-6 col-sm-12">
+                cars_grid_html += `<div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
                         <div class="listing-thumbnail">
                             <img src="${element.post_thumbnail_url}"></img>
@@ -438,11 +438,14 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
                         <div class="listing-content">
                             <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
                             <div class="listing-meta">
-                                <ul>
-                                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                                <ul><li><span><i class="ti-location-pin"></i>
+                                ${element.ciudad}
+                                </span></li>
                                 </ul>
                             </div>
+                            <span class="price" style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
+                              Precio: ${element.precio} </p>
+                            </span>
                         </div>
                     </div>
                 </div>`;

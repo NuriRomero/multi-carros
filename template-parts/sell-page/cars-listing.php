@@ -46,25 +46,19 @@ if ( $cars->have_posts() ) :
 								<h3 class="title">
 									<a href="<?php the_permalink(); ?>">
 										<?php
-										$modelo = get_post_meta( get_the_ID(), 'main_information_metabox_modelo', true );
-										$anio   = get_post_meta( get_the_ID(), 'main_information_metabox_año_modelo', true );
-										echo $modelo . ' ' . $anio;
+										get_the_title();
 										?>
 									</a>
 								</h3>
 								<div class="listing-meta">
-									<ul>
-									<?php
-									$location = get_post_meta( get_the_ID(), 'administrative_area_level_1', true );
-									
-									?>
-										
+									<ul><li><span><i class="ti-location-pin"></i>
+									<?php get_post_meta( get_the_ID(), 'administrative_area_level_1', true );?>
+									</span></li>
 									</ul>
 								</div>
 								<span class="price">Precio: <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_precio', true ); ?></span>
-							</div>
-							<div class="listing-meta">
-
+								</div>
+								<div class="listing-meta">
 							</div>
 						</div>
 					</div>

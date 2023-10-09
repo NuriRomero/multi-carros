@@ -49,7 +49,7 @@ get_header();
 											<option data-display="Todos los tipos de combustibles" value="Mostrar Todas">Todos los tipos de
 												combustible</option>
 											<?php
-											$args      = array(
+											$args = array(
 												'orderby' => 'name',
 												'order'   => 'ASC',
 												'hide_empty' => true,
