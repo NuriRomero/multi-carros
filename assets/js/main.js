@@ -410,7 +410,6 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
   const selectedTypeCar = $('#cars-type_car-selector').val();
 
   $.ajax({
-<<<<<<< HEAD
     url: cars.ajaxurl,
     type: "POST",
     data: {
@@ -449,53 +448,6 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
                   </div>
                 </div>
               </div>
-=======
-      url: cars.ajaxurl,
-      type: "POST",
-      data: {
-          action: "filtrar_por_categoria",
-          'cars-brand-selector': selectedBrand,
-          'cars-fuel-selector': selectedFuel,
-          'cars-condition-selector': selectedCondition,
-          'cars-type_car-selector': selectedTypeCar
-      },
-      
-      beforeSend: function () {
-          $("#listing-cars").html("Cargando");
-      },
-
-      success: function (data) {
-          console.log(data);
-          let cars_grid_html = "";
-          if (Array.isArray(data) && data.length > 0) {
-            // Si data es un array con elementos, muestra los resultados
-            data.forEach((element) => {
-                cars_grid_html += `<div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                        <div class="listing-thumbnail">
-                            <img src="${element.post_thumbnail_url}"></img>
-                            <span class="featured-btn">${element.estado}</span>
-                        </div>
-                        <div class="listing-content">
-                            <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                            <div class="listing-meta">
-                                <ul><li><span><i class="ti-location-pin"></i>
-                                ${element.ciudad}
-                                </span></li>
-                                </ul>
-                            </div>
-                            <span class="price" style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
-                              Precio: ${element.precio} </p>
-                            </span>
-                        </div>
-                    </div>
-                </div>`;
-            });
-          } else {// Si data no es un array o está vacío, muestra el mensaje de "No se encontraron resultados"
-          
-            cars_grid_html = `<div class="col-md-12">
-                <p>No se encontraron resultados con las características seleccionadas.</p>
->>>>>>> ba1e572 (Fixed cars-grid)
             </div>`;
           if ((index + 1) % 2 === 0) {
             cars_grid_html += `</div><div class="row">`; // Cierra la fila después de cada segundo carro
