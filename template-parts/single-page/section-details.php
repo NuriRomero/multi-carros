@@ -161,19 +161,27 @@
                     <div class="releted-listing-slider-one">
                         <?php
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                         // Obtener los términos de la taxonomía 'type_car' para el auto actual
 >>>>>>> ba1e572 (Fixed cars-grid)
+=======
+                        // Obtener los términos de la taxonomía 'type_car' para el auto actual
+>>>>>>> fc7216526ecd7ca268ed62e1521ced104956f51c
                         $terms = wp_get_post_terms( get_the_ID(), 'type_car' );
                         if ( ! empty( $terms ) ) {
                             $type_car = $terms[0]->slug;
                             $args = array(
                                 'post_type'      => 'cars', 
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 'posts_per_page' => 3, 
 =======
                                 'posts_per_page' => 4,
 >>>>>>> ba1e572 (Fixed cars-grid)
+=======
+                                'posts_per_page' => 4,
+>>>>>>> fc7216526ecd7ca268ed62e1521ced104956f51c
                                 'tax_query'      => array(
                                     array(
                                         'taxonomy' => 'type_car',
@@ -181,6 +189,7 @@
                                         'terms'    => $type_car,
                                     ),
                                 ),
+<<<<<<< HEAD
 <<<<<<< HEAD
                                 'post__not_in'   => array( get_the_ID() ), // Excluir el auto actual
                             );
@@ -220,6 +229,11 @@
                                 'post__not_in'   => array( get_the_ID() ), 
                             );
 
+=======
+                                'post__not_in'   => array( get_the_ID() ), 
+                            );
+
+>>>>>>> fc7216526ecd7ca268ed62e1521ced104956f51c
                         $related_cars = new WP_Query( $args );
                         while ( $related_cars->have_posts() ) :
                             $related_cars->the_post();
@@ -246,7 +260,10 @@
                         <?php
                         endwhile;
                          wp_reset_postdata();
+<<<<<<< HEAD
 >>>>>>> ba1e572 (Fixed cars-grid)
+=======
+>>>>>>> fc7216526ecd7ca268ed62e1521ced104956f51c
                         }
                         ?>
                     </div>
@@ -258,12 +275,16 @@
                         <div class="contact-info-widget-wrap">
                             <div class="contact-map">
 <<<<<<< HEAD
+<<<<<<< HEAD
                                 <?php
 								$location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );
 								?>
 =======
                                 <?php $location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );?>
 >>>>>>> ba1e572 (Fixed cars-grid)
+=======
+                                <?php $location = get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true );?>
+>>>>>>> fc7216526ecd7ca268ed62e1521ced104956f51c
                                 <iframe
                                     src="https://maps.google.com/maps?q=<?php echo $location['latitude']; ?>,<?php echo $location['longitude']; ?>&ie=UTF8&iwloc=&output=embed"></iframe>
                                 <a href="#" class="support-icon"><i class="flaticon-headphone"></i></a>
