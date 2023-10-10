@@ -49,7 +49,7 @@ get_header();
 											<option data-display="Todos los tipos de combustibles" value="Mostrar Todas">Todos los tipos de
 												combustible</option>
 											<?php
-											$args      = array(
+											$args = array(
 												'orderby' => 'name',
 												'order'   => 'ASC',
 												'hide_empty' => true,
@@ -112,26 +112,27 @@ get_header();
 					</div>
 					<div class="row listing-grid-wrapper" id="listing-cars">
 						<?php
-						if ( have_posts() ) :
+						if (have_posts()) :
 							$count = 0; // Contador para las columnas
-							while ( have_posts() ) :
+							while (have_posts()) :
 								the_post();
 								++$count;
-								?>
-						<div class="col-md-4">
-							<!-- Aquí está el contenido de cada carro -->
-								<?php get_template_part( 'template-parts/cars', 'grid' ); ?>
-						</div>
-								<?php
-								if ( $count % 4 == 0 ) {
-									echo '</div><div class="row listing-grid-wrapper">';
-								}
-							endwhile;
-						else :
-							get_template_part( 'template-parts/cars', 'none' );
-						endif;
 						?>
-					</div>
+						<div class="col-md-6"> <!-- Cambiamos col-md-4 por col-md-6 -->
+							<!-- Aquí está el contenido de cada carro -->
+							<?php get_template_part('template-parts/cars', 'grid'); ?>
+						</div>
+							<?php
+									if ($count % 2 == 0) { // Cambiamos 4 por 2 para dos columnas
+										echo '</div><div class="row listing-grid-wrapper">';
+									}
+								endwhile;
+							else :
+								get_template_part('template-parts/cars', 'none');
+							endif;
+							?>
+				    </div>
+
 				</div>
 			</div>
 		</div>

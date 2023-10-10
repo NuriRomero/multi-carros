@@ -403,12 +403,53 @@
 // Selector de taxonomias con ajax muestra los resultados de combustible
 
 $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-type_car-selector').change(function () {
-      // Obtén los valores de los selectores de categorías
-      const selectedBrand = $('#cars-brand-selector').val();
-      const selectedFuel = $('#cars-fuel-selector').val();
-      const selectedCondition = $('#cars-condition-selector').val();
-      const selectedTypeCar = $('#cars-type_car-selector').val();
+  // Obtén los valores de los selectores de categorías
+  const selectedBrand = $('#cars-brand-selector').val();
+  const selectedFuel = $('#cars-fuel-selector').val();
+  const selectedCondition = $('#cars-condition-selector').val();
+  const selectedTypeCar = $('#cars-type_car-selector').val();
+
   $.ajax({
+<<<<<<< HEAD
+    url: cars.ajaxurl,
+    type: "POST",
+    data: {
+      action: "filtrar_por_categoria",
+      'cars-brand-selector': selectedBrand,
+      'cars-fuel-selector': selectedFuel,
+      'cars-condition-selector': selectedCondition,
+      'cars-type_car-selector': selectedTypeCar
+    },
+    beforeSend: function () {
+      // Hide individual car listings and show a loading message in the listing-cars container
+      $("#listing-cars").html("Cargando");
+      $(".col-md-6").hide();
+    },
+    success: function (data) {
+      console.log(data);
+      let cars_grid_html = "";
+      if (Array.isArray(data) && data.length > 0) {
+        // Si data es un array con elementos, muestra los resultados
+        cars_grid_html += `<div class="row">`; // Inicia una nueva fila
+        data.forEach((element, index) => {
+          cars_grid_html += `
+            <div class="col-md-6 col-sm-12">
+              <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                <div class="listing-thumbnail">
+                  <img src="${element.post_thumbnail_url}"></img>
+                  <span class="featured-btn">${element.estado}</span>
+                </div>
+                <div class="listing-content">
+                  <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                  <div class="listing-meta">
+                    <ul>
+                      <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                      <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+=======
       url: cars.ajaxurl,
       type: "POST",
       data: {
@@ -429,7 +470,7 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
           if (Array.isArray(data) && data.length > 0) {
             // Si data es un array con elementos, muestra los resultados
             data.forEach((element) => {
-                cars_grid_html += `<div class="col-md-6 col-sm-12">
+                cars_grid_html += `<div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
                         <div class="listing-thumbnail">
                             <img src="${element.post_thumbnail_url}"></img>
@@ -438,11 +479,14 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
                         <div class="listing-content">
                             <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
                             <div class="listing-meta">
-                                <ul>
-                                    <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                                    <span style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio:</i>${element.precio}</span>
+                                <ul><li><span><i class="ti-location-pin"></i>
+                                ${element.ciudad}
+                                </span></li>
                                 </ul>
                             </div>
+                            <span class="price" style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
+                              Precio: ${element.precio} </p>
+                            </span>
                         </div>
                     </div>
                 </div>`;
@@ -451,17 +495,27 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
           
             cars_grid_html = `<div class="col-md-12">
                 <p>No se encontraron resultados con las características seleccionadas.</p>
+>>>>>>> ba1e572 (Fixed cars-grid)
             </div>`;
+          if ((index + 1) % 2 === 0) {
+            cars_grid_html += `</div><div class="row">`; // Cierra la fila después de cada segundo carro
           }
+        });
+        cars_grid_html += `</div>`; // Cierra la última fila
+      } else {
+        // Si data no tiene elementos, maneja el caso de no resultados
+        cars_grid_html = "No se encontraron resultados.";
+      }
 
-    $("#listing-cars").html(cars_grid_html);
-},
-
-      error: function (error) {
-          console.log(error);
-      },
+      // Inserta el HTML generado en el contenedor y show it
+      $("#listing-cars").html(cars_grid_html).show();
+    },
+    error: function (error) {
+      console.log(error);
+    },
   });
 });
+
 
 
 
