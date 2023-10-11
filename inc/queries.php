@@ -24,3 +24,20 @@ if ( ! function_exists( 'get_cars' ) ) {
 	}
 
 }
+if( ! function_exists( 'query_db_metavalue' ) ) {
+
+	function query_db_metavalue( $post_meta ) {
+
+		global $wpdb;
+
+		$meta_key_values = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s",
+				$post_meta
+			)
+		);
+		return $meta_key_values;
+
+	}
+
+}

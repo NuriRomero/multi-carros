@@ -88,6 +88,29 @@ get_header();
 											}
 											?>
 										</select>
+										<!-- city selector  -->
+										<select class="wide" id="cars-administrative-selector" class="filtro-select">
+											<option data-display="Todos los estados" value="Mostrar Todas" >Todos los estados</option>
+											<?php
+											$localities=query_db_metavalue('administrative_area_level_1');
+											// var_dump($localities);
+											foreach ( $localities as $city ) {
+												echo '<option value="'.$city.'">'.$city.'</option>';
+											}
+											?>
+										</select>
+										<!-- city selector  -->
+										<select class="wide" id="cars-city-selector" class="filtro-select">
+											<option data-display="Todas las ciudades" value="Mostrar Todas" >Todas las ciudades</option>
+											<?php
+											$localities=query_db_metavalue('locality');
+											// var_dump($localities);
+											foreach ( $localities as $city ) {
+												echo '<option value="'.$city.'">'.$city.'</option>';
+											}
+											?>
+										
+										</select>
 									</div>
 								</div>
 							</form>
@@ -107,8 +130,9 @@ get_header();
 						</div>
 					</div>
 					<div class="row listing-grid-wrapper" id="listing-cars">
+						
 						<?php
-						if (have_posts()) :
+						if ( have_posts() ) :
 							$count = 0; // Contador para las columnas
 							while (have_posts()) :
 								the_post();
