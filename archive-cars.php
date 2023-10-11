@@ -23,9 +23,11 @@ get_header();
 							<form>
 								<div class="search-form">
 									<div class="form_group">
-										<input type="search" class="form_control" placeholder="Buscar por palabra clave"
-											name="search" required>
-										<i class="ti-search"></i>
+										<input type="search" class="form_control" placeholder="Buscar por palabra clave" name="search" id="search-input" required>
+										 <!-- <button id="search-button">
+											<i class="ti-search"></i>
+										 </button> -->
+
 									</div>
 									<div class="form_group cars-categories" id="filtro-multiple">
 										<!-- brand selector  -->
@@ -43,13 +45,12 @@ get_header();
 											}
 											?>
 										</select>
-
 										<!-- fuel selector  -->
 										<select class="wide" id="cars-fuel-selector" class="filtro-select">
 											<option data-display="Todos los tipos de combustibles" value="Mostrar Todas">Todos los tipos de
 												combustible</option>
 											<?php
-											$args = array(
+											$args      = array(
 												'orderby' => 'name',
 												'order'   => 'ASC',
 												'hide_empty' => true,
@@ -60,7 +61,6 @@ get_header();
 											}
 											?>
 										</select>
-
 										<!-- condition selector  -->
 										<select class="wide" id="cars-condition-selector" class="filtro-select">
 											<option data-display="Todos las condiciones de autos" value="Mostrar Todas">Todas las condiciones
@@ -118,29 +118,24 @@ get_header();
 								the_post();
 								++$count;
 						?>
-						<div class="col-md-6"> <!-- Cambiamos col-md-4 por col-md-6 -->
-							<!-- Aquí está el contenido de cada carro -->
+						<div class="col-md-6"> 
 							<?php get_template_part('template-parts/cars', 'grid'); ?>
 						</div>
 							<?php
-									if ($count % 2 == 0) { // Cambiamos 4 por 2 para dos columnas
-										echo '</div><div class="row listing-grid-wrapper">';
-									}
+								if ($count % 2 == 0) { 
+									echo '</div><div class="row listing-grid-wrapper">';
+								}
 								endwhile;
 							else :
 								get_template_part('template-parts/cars', 'none');
 							endif;
 							?>
 				    </div>
-
 				</div>
 			</div>
 		</div>
 	</section>
 	<!--====== End Listing Section ======-->
-
 </main><!-- #main -->
-
-
 <?php
 get_footer();
