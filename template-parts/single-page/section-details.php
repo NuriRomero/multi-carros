@@ -19,7 +19,6 @@
                         <div class="row align-items-center">
                             <div class="col-md-8">
                                 <div class="listing-info-content">
-
                                     <h3 class="title"><?php the_title(); ?></h3>
                                     <div class="listing-meta">
                                         <ul>
@@ -44,31 +43,31 @@
                     </div>
                     <div class="listing-thumbnail mb-30 wow fadeInUp">
                         <?php
-								$image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
-							if ( $image_url ) {
-								echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
-							} else {
-								echo 'No se ha proporcionado una imagen válida.';
-							}
-							?>
+                            $image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
+                        if ( $image_url ) {
+                            echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
+                        } else {
+                            echo 'No se ha proporcionado una imagen válida.';
+                        }
+                        ?>
                     </div>
                     <div class="listing-gallery-box mb-30 wow fadeInUp">
                         <h4 class="title">Galería de fotos</h4>
                         <div class="gallery-slider-one">
                             <?php
-								$galeria = get_post_meta( get_the_ID(), 'main_information_metabox_multiples_fotos', true );
-								if ( ! empty( $galeria ) ) {
-									foreach ( $galeria as $id => $imagen ) {
-										if ( $imagen ) {
-											echo '<a href="' . esc_url( $imagen ) . '" class="gallery-item img-popup">';
-											echo wp_get_attachment_image( $id, 'galery_carousel', false, array( 'class' => 'img-fluid' ) );
-											echo '</a>';
-										}
-									}
-								} else {
-									echo 'No se han proporcionado imágenes válidas.';
-								}
-								?>
+                            $galeria = get_post_meta( get_the_ID(), 'main_information_metabox_multiples_fotos', true );
+                            if ( ! empty( $galeria ) ) {
+                                foreach ( $galeria as $id => $imagen ) {
+                                    if ( $imagen ) {
+                                        echo '<a href="' . esc_url( $imagen ) . '" class="gallery-item img-popup">';
+                                        echo wp_get_attachment_image( $id, 'galery_carousel', false, array( 'class' => 'img-fluid' ) );
+                                        echo '</a>';
+                                    }
+                                }
+                            } else {
+                                echo 'No se han proporcionado imágenes válidas.';
+                            }
+							?>
                         </div>
                     </div>
 
