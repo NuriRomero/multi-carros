@@ -1,10 +1,11 @@
 <?php
+//Function to filter cars
 function filtrar_por_palabra_clave() {
     $keyword = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
 
     $args = array(
         'post_type' => 'cars',
-        's' => $keyword, // Utiliza la palabra clave para buscar en el contenido del post
+        's' => $keyword, 
     );
 
     $query = new WP_Query($args);
@@ -27,7 +28,7 @@ function filtrar_por_palabra_clave() {
             $results[] = $post_data;
         }
 
-        wp_reset_postdata(); // Restauramos los datos del post
+        wp_reset_postdata(); 
     }
 
     wp_send_json($results);
@@ -38,7 +39,6 @@ add_action('wp_ajax_filtrar_por_palabra_clave', 'filtrar_por_palabra_clave');
 add_action('wp_ajax_nopriv_filtrar_por_palabra_clave', 'filtrar_por_palabra_clave');
 
 
-//Function to filter cars
 function filtrar_por_categoria() {
 	$selected_brand = isset($_POST['cars-brand-selector']) ? $_POST['cars-brand-selector'] : 'Todas las marcas';
 	$selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
