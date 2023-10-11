@@ -24,10 +24,6 @@ get_header();
 								<div class="search-form">
 									<div class="form_group">
 										<input type="search" class="form_control" placeholder="Buscar por palabra clave" name="search" id="search-input" required>
-										 <!-- <button id="search-button">
-											<i class="ti-search"></i>
-										 </button> -->
-
 									</div>
 									<div class="form_group cars-categories" id="filtro-multiple">
 										<!-- brand selector  -->
