@@ -401,8 +401,7 @@
   );
 
 // Selector de taxonomias con ajax muestra los resultados de combustible
-// Función para realizar la búsqueda por palabra clave
-// Función para realizar la búsqueda por palabra clave
+
 function buscarPorPalabraClave() {
   const keyword = $('#search-input').val();
 
@@ -410,7 +409,7 @@ function buscarPorPalabraClave() {
     url: cars.ajaxurl,
     type: "POST",
     data: {
-      action: "filtrar_por_palabra_clave", // Nombre de la acción para la búsqueda por palabra clave
+      action: "filtrar_por_palabra_clave", 
       'search': keyword,
     },
     beforeSend: function () {
@@ -457,10 +456,8 @@ function buscarPorPalabraClave() {
   });
 }
 
-// Llama a la función buscarPorPalabraClave cuando se pulsa el botón de búsqueda
-$('#search-button').on('click', buscarPorPalabraClave);
 
-// También llama a la función buscarPorPalabraClave cuando se cambia el campo de búsqueda
+$('#search-button').on('click', buscarPorPalabraClave);
 $('#search-input').on('keyup', buscarPorPalabraClave);
 
 
