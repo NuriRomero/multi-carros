@@ -527,5 +527,35 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
     },
   });
 });
+$estadoSelector.change(function () {
+  const selectedEstado = $estadoSelector.val();
+  $ciudadSelector.empty();
+
+  if (selectedEstado !== 'Mostrar Todas') {
+      // Realizar una solicitud AJAX para cargar las ciudades
+      $.ajax({
+          url: cars.ajaxurl,
+          type: 'POST',
+          data: {
+              action: 'filtrar_por_categoria',
+              'cars-administrative-selector': selectedEstado,
+          },
+          success: function (data) {
+              if (Array.isArray(data) && data.length > 0) {
+                  $.each(data, function (i, ciudad) {
+                      $ciudadSelector.append($('<option>').text(ciudad.title).val(ciudad.title));
+                  });
+              } else {
+                  $ciudadSelector.append($('<option>').text('No hay ciudades disponibles').val(''));
+              }
+          },
+          error: function (error) {
+              console.log(error);
+          },
+      });
+  } else {
+      $ciudadSelector.append($('<option>').text('Todas las ciudades').val('Mostrar Todas'));
+  }
+});
 
 })(window.jQuery);

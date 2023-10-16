@@ -10,7 +10,7 @@
 			<h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
 			<div class="listing-meta">
 				<ul>
-					<?php echo "Ciudad: ".$location = get_post_meta( get_the_ID(), 'administrative_area_level_1', true );?>
+					<?php echo "Ciudad: ".$location = get_post_meta( get_the_ID(), 'locality', true );?>
 					</span></li>
 				</ul>
 			</div>

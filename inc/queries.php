@@ -40,4 +40,23 @@ if( ! function_exists( 'query_db_metavalue' ) ) {
 
 	}
 
+if ( ! function_exists('query_cities_by_state') ) {
+	function query_cities_by_state( $selected_state ) {
+		
+		global $wpdb;
+
+		$query = $wpdb->prepare(
+			"SELECT DISTINCT post_title FROM $wpdb->posts
+			LEFT JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id
+			WHERE $wpdb->postmeta.meta_key = 'estado' AND $wpdb->postmeta.meta_value = %s
+			AND $wpdb->posts.post_type = 'ciudad'",
+			$selected_state
+		);
+
+		$cities = $wpdb->get_col($query);
+
+		return $cities;
+	}
+}
+
 }

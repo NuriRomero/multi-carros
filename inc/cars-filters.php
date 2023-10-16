@@ -44,6 +44,7 @@ function filtrar_por_categoria() {
 	$selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
 	$selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todos las condiciones de autos';
 	$selected_type_car = isset($_POST['cars-type_car-selector']) ? $_POST['cars-type_car-selector'] : 'Todas los tipos de auto';
+	$selected_administrative = isset($_POST['cars-administrative-selector']) ? $_POST['cars-administrative-selector'] : 'Mostrar Todas';
 
 	$selected_categories = array(
 		$selected_brand,
@@ -53,11 +54,20 @@ function filtrar_por_categoria() {
 	);
 
 	$tax_query = array();
+	
+	
 
+	if ($selected_administrative !== 'Mostrar Todas') {
+		$tax_query = query_cities_by_state($selected_administrative);
+	}
 	
 	$selected_categories_count = count(array_filter($selected_categories, function ($category) {
 		return $category !== 'Mostrar Todas';
 	}));
+
+	if ($selected_administrative !== 'Mostrar Todas') {
+		$selected_cities = query_cities_by_state($selected_administrative);
+	}
 
 	if ($selected_brand !== 'Mostrar Todas') {
 		$tax_query[] = array(
@@ -111,7 +121,7 @@ function filtrar_por_categoria() {
 				'title' => get_the_title(),
 				'permalink' => get_permalink(),
 				'post_thumbnail_url' => get_the_post_thumbnail_url( get_the_ID(),'car_size_photo'),
-				'ciudad' => get_post_meta(get_the_ID(), 'administrative_area_level_1', true),
+				'ciudad' => get_post_meta(get_the_ID(), 'locality', true),
 				'estado' => wp_get_post_terms(get_the_ID(), 'condition', array('fields' => 'names'))[0],
 				'precio' => get_post_meta(get_the_ID(), 'main_information_metabox_precio', true),
 			);

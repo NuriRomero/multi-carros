@@ -92,10 +92,10 @@ get_header();
 										<select class="wide" id="cars-administrative-selector" class="filtro-select">
 											<option data-display="Todos los estados" value="Mostrar Todas" >Todos los estados</option>
 											<?php
-											$localities=query_db_metavalue('administrative_area_level_1');
-											// var_dump($localities);
-											foreach ( $localities as $city ) {
-												echo '<option value="'.$city.'">'.$city.'</option>';
+											$states=query_db_metavalue('administrative_area_level_1');
+											// var_dump($states);
+											foreach ( $states as $state ) {
+												echo '<option value="'.$state.'">'.$state.'</option>';
 											}
 											?>
 										</select>
@@ -109,7 +109,6 @@ get_header();
 												echo '<option value="'.$city.'">'.$city.'</option>';
 											}
 											?>
-										
 										</select>
 									</div>
 								</div>
@@ -157,5 +156,6 @@ get_header();
 	</section>
 	<!--====== End Listing Section ======-->
 </main><!-- #main -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDLmCQLfLOJF1e7qjXgZ-viAASSimaHvvk&libraries=places&callback=initMap"></script>
 <?php
 get_footer();
