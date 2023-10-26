@@ -24,39 +24,31 @@ if ( ! function_exists( 'get_cars' ) ) {
 	}
 
 }
-if( ! function_exists( 'query_db_metavalue' ) ) {
-
-	function query_db_metavalue( $post_meta ) {
-
-		global $wpdb;
-
-		$meta_key_values = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s",
-				$post_meta
-			)
-		);
-		return $meta_key_values;
-
-	}
-
-if ( ! function_exists('query_cities_by_state') ) {
-	function query_cities_by_state( $selected_state ) {
-		
-		global $wpdb;
-
-		$query = $wpdb->prepare(
-			"SELECT DISTINCT post_title FROM $wpdb->posts
-			LEFT JOIN $wpdb->postmeta ON $wpdb->posts.ID = $wpdb->postmeta.post_id
-			WHERE $wpdb->postmeta.meta_key = 'estado' AND $wpdb->postmeta.meta_value = %s
-			AND $wpdb->posts.post_type = 'ciudad'",
-			$selected_state
-		);
-
-		$cities = $wpdb->get_col($query);
-
-		return $cities;
-	}
+if ( ! function_exists( 'query_db_metavalue' ) ) {
+    function query_db_metavalue( $post_meta ) {
+        global $wpdb;
+        $meta_key_values = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value <> ''",
+                $post_meta
+            )
+        );
+        return $meta_key_values;
+    }
 }
 
+
+if (!function_exists('query_db_metavalue_estados')) {
+    function query_db_metavalue_estados($post_meta) {
+
+        global $wpdb;
+        $estados = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s",
+                'administrative_area_level_1'
+            )
+        );
+
+        return $estados; // Devuelve el resultado
+    }
 }
