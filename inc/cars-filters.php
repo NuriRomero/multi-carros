@@ -1,5 +1,7 @@
 <?php
-//Function to filter cars
+/* ------------------------------------------------------------
+Function for filter post cars
+--------------------------------------------------------------- */
 function filtrar_por_palabra_clave() {
     $keyword = isset($_POST['search']) ? sanitize_text_field($_POST['search']) : '';
 
@@ -40,12 +42,13 @@ add_action('wp_ajax_nopriv_filtrar_por_palabra_clave', 'filtrar_por_palabra_clav
 
 
 function filtrar_por_categoria() {
+
     $selected_brand = isset($_POST['cars-brand-selector']) ? $_POST['cars-brand-selector'] : 'Todas las marcas';
     $selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
-    $selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todos las condiciones de autos';
-    $selected_type_car = isset($_POST['cars-type_car-selector']) ? $_POST['cars-type_car-selector'] : 'Todas los tipos de auto';
-    $selected_state = isset($_POST['cars-state-selector']) ? $_POST['cars-state-selector'] : 'Todas las opciones de estado';
-    $selected_city = isset($_POST['cars-city-selector']) ? $_POST['cars-city-selector'] : 'Todas las opciones de ciudad';
+    $selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todas las condiciones';
+    $selected_type_car = isset($_POST['cars-type_car-selector']) ? $_POST['cars-type_car-selector'] : 'Todos los tipos de auto';
+    $selected_state = isset($_POST['cars-state-selector']) ? $_POST['cars-state-selector'] : 'Todos los estados';
+    $selected_city = isset($_POST['cars-city-selector']) ? $_POST['cars-city-selector'] : 'Todas las ciudades';
 
     $selected_categories = array(
         $selected_brand,
@@ -99,7 +102,12 @@ function filtrar_por_categoria() {
     } else {
         $tax_query['relation'] = 'OR';
     }
-
+    
+    if ($selected_state !== 'Todos los estados' || $selected_city !== 'Todas las ciudades') {
+        $tax_relation = 'OR';
+    } else {
+        $tax_relation = 'AND';
+    }
     // Realiza una consulta para obtener las entradas que coinciden con los campos de metabox.
     $metabox_args = array(
         'post_type' => 'cars',
@@ -107,7 +115,7 @@ function filtrar_por_categoria() {
         'meta_query' => array(),
     );
 
-    if ($selected_state !== 'Todas las opciones de estado') {
+    if ($selected_state !== 'Mostrar Todas') {
         $metabox_args['meta_query'][] = array(
             'key' => 'administrative_area_level_1',
             'value' => $selected_state,
@@ -115,7 +123,7 @@ function filtrar_por_categoria() {
         );
     }
 
-    if ($selected_city !== 'Todas las opciones de ciudad') {
+    if ($selected_city !== 'Mostrar Todas') {
         $metabox_args['meta_query'][] = array(
             'key' => 'locality',
             'value' => $selected_city,

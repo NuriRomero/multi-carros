@@ -76,7 +76,7 @@ get_header();
                                         </select>
                                         <!-- type_car selector  -->
                                         <select class="wide filtro-select" id="cars-type_car-selector">
-                                            <option data-display="Todos los tipos de auto" value="Mostrar Todas">Todos los tipos de auto </option>
+                                            <option data-display="Todos los tipos de auto" value="Mostrar Todas">Todos los tipos de auto</option>
                                             <?php
 											$args = array(
 												'orderby' => 'name',
