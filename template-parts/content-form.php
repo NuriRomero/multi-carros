@@ -5,19 +5,19 @@
 			<div class="row">
 				<div class="col-lg-8">
 					<div class="page-title">
-						<h1 class="title">Add Listing</h1>
+						<h1 class="title">Publicar un Auto</h1>
 						<ul class="breadcrumbs-link">
-							<li><a href="index.html">Home</a></li>
-							<li class="active">Listing</li>
+							<li><a href="index.html">Inicio</a></li>
+							<li class="active">Listar</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
+		
 	</div>
 </section>
 <!--====== End Hero Section ======-->
-<!--====== Start Add Listing Section ======-->
 <!--====== Start Add Listing Section ======-->
 <section class="fioxen-add-listing pt-120 pb-120">
 	<div class="container">

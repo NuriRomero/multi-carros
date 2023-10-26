@@ -49,17 +49,19 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 	   
 
 		<h2>Estatus</h2>
+		
 		<?php
 		$terms_type_car = get_terms(
 			array(
-				'taxonomy'   => 'status',
+				'taxonomy'   => 'condition',
 				'hide_empty' => false,
 			)
 		);
 
 		foreach ( $terms_type_car as $term ) {
-			echo '<label><input type="checkbox" name="status[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
+			echo '<label><input type="checkbox" name="condition[]" value="' . $term->slug . '"> ' . $term->name . '</label><br>';
 		}
+
 		?>
 		
 		<h2>Tipo de auto</h2>

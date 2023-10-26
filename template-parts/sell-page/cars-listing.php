@@ -30,7 +30,7 @@ if ( $cars->have_posts() ) :
 						<div class="listing-item listing-grid-one mb-45 wow fadeInUp" dta-wow-delay="10ms">
 							<div class="listing-thumbnail">
 							<?php
-								$image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
+								$image_url = the_post_thumbnail( get_the_ID(), 'car_size_photo' );
 							if ( $image_url ) {
 								echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
 							} else {
@@ -43,19 +43,22 @@ if ( $cars->have_posts() ) :
 								</li></span>
 							</div>
 							<div class="listing-content">
-								<h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
+								<h3 class="title">
+									<a href="<?php the_permalink(); ?>">
+										<?php
+										get_the_title();
+										?>
+									</a>
 								</h3>
 								<div class="listing-meta">
-									<ul>
-										<li><span><i class="ti-location-pin"></i><?php echo get_post_meta( get_the_ID(), 'main_information_metabox_ciudad', true ); ?></span>
-										</li>
-										
+									<ul><li><span><i class="ti-location-pin"></i>
+									<?php get_post_meta( get_the_ID(), 'administrative_area_level_1', true );?>
+									</span></li>
 									</ul>
 								</div>
 								<span class="price">Precio: <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_precio', true ); ?></span>
-							</div>
-							<div class="listing-meta">
-
+								</div>
+								<div class="listing-meta">
 							</div>
 						</div>
 					</div>

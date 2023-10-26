@@ -1220,7 +1220,7 @@ button {
     height: 100%; }
   .breadcrumbs-wrapper:after {
     right: 0;
-    background: url(../images/bg/breadcrumbs-bg-2.jpg) no-repeat center;
+    background: url(../images/bg/hero-bg-cars.jpg) no-repeat center;
     background-size: cover; }
     @media (max-width: 991px) {
       .breadcrumbs-wrapper:after {

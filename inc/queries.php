@@ -24,3 +24,31 @@ if ( ! function_exists( 'get_cars' ) ) {
 	}
 
 }
+if ( ! function_exists( 'query_db_metavalue' ) ) {
+    function query_db_metavalue( $post_meta ) {
+        global $wpdb;
+        $meta_key_values = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value <> ''",
+                $post_meta
+            )
+        );
+        return $meta_key_values;
+    }
+}
+
+
+if (!function_exists('query_db_metavalue_estados')) {
+    function query_db_metavalue_estados($post_meta) {
+
+        global $wpdb;
+        $estados = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s",
+                'administrative_area_level_1'
+            )
+        );
+
+        return $estados; // Devuelve el resultado
+    }
+}
