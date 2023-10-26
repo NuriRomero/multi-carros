@@ -395,103 +395,103 @@
   });
   $("#amount").val(
     "$" +
-      $("#slider-range").slider("values", 0) +
-      " - $" +
-      $("#slider-range").slider("values", 1)
+    $("#slider-range").slider("values", 0) +
+    " - $" +
+    $("#slider-range").slider("values", 1)
   );
 
-// Selector de taxonomias con ajax muestra los resultados de combustible
+  // Selector de taxonomias con ajax muestra los resultados de combustible
 
-function buscarPorPalabraClave() {
-  const keyword = $('#search-input').val();
+  function buscarPorPalabraClave() {
+    const keyword = $('#search-input').val();
 
-  $.ajax({
-    url: cars.ajaxurl,
-    type: "POST",
-    data: {
-      action: "filtrar_por_palabra_clave", 
-      'search': keyword,
-    },
-    beforeSend: function () {
-      $("#listing-cars").html("Cargando");
-      $(".col-md-6").hide();
-    },
-    success: function (data) {
-      console.log(data);
-      let cars_grid_html = "";
-      if (Array.isArray(data) && data.length > 0) {
-        cars_grid_html += `<div class="row">`;
-        data.forEach((element, index) => {
-          cars_grid_html += `
-            <div class="col-md-6 col-sm-12">
-              <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
-                <div class="listing-thumbnail">
-                  <img src="${element.post_thumbnail_url}"></img>
-                  <span class="featured-btn">${element.estado}</span>
-                </div>
-                <div class "listing-content">
-                  <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
-                  <div class="listing-meta">
-                    <ul>
-                      <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
-                      <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
-                    </ul>
-                  </div>
-                </div>
+    $.ajax({
+      url: cars.ajaxurl,
+      type: "POST",
+      data: {
+        action: "filtrar_por_palabra_clave",
+        'search': keyword,
+      },
+      beforeSend: function () {
+        $("#listing-cars").html("Cargando");
+        $(".col-md-6").hide();
+      },
+      success: function (data) {
+        let cars_grid_html = "";
+        if (Array.isArray(data) && data.length > 0) {
+          cars_grid_html += `<div class="row">`;
+          data.forEach((element, index) => {
+            cars_grid_html += `
+          <div class="col-md-6 col-sm-12">
+          <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+            <div class="listing-thumbnail">
+              <img src="${element.post_thumbnail_url}"></img>
+              <span class="featured-btn">${element.estado}</span>
+            </div>
+            <div class="listing-content">
+              <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+              <div class="listing-meta">
+                <ul>
+                  <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                  <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
+                </ul>
               </div>
-            </div>`;
-          if ((index + 1) % 2 === 0) {
-            cars_grid_html += `</div><div class="row">`;
-          }
-        });
-        cars_grid_html += `</div>`;
-      } else {
-        cars_grid_html = "No se encontraron resultados.";
-      }
-      $("#listing-cars").html(cars_grid_html).show();
-    },
-    error: function (error) {
-      console.log(error);
-    },
-  });
-}
+            </div>
+          </div>
+        </div>`;
+            if ((index + 1) % 2 === 0) {
+              cars_grid_html += `</div><div class="row">`;
+            }
+          });
+          cars_grid_html += `</div>`;
+        } else {
+          cars_grid_html = "No se encontraron resultados.";
+        }
+        $("#listing-cars").html(cars_grid_html).show();
+      },
+      error: function (error) {
+      },
+    });
+  }
 
 
-$('#search-button').on('click', buscarPorPalabraClave);
-$('#search-input').on('keyup', buscarPorPalabraClave);
+  $('#search-button').on('click', buscarPorPalabraClave);
+  $('#search-input').on('keyup', buscarPorPalabraClave);
 
 
+  function filtrarAutos() {
+    // Obtiene los valores de los selectores de categorías
+    const selectedBrand = $('#cars-brand-selector').val();
+    const selectedFuel = $('#cars-fuel-selector').val();
+    const selectedCondition = $('#cars-condition-selector').val();
+    const selectedTypeCar = $('#cars-type_car-selector').val();
+    const selectedState = $('#cars-state-selector').val();
+    const selectedCity = $('#cars-city-selector').val();
 
-$('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-type_car-selector').change(function () {
-  // Obtén los valores de los selectores de categorías
-  const selectedBrand = $('#cars-brand-selector').val();
-  const selectedFuel = $('#cars-fuel-selector').val();
-  const selectedCondition = $('#cars-condition-selector').val();
-  const selectedTypeCar = $('#cars-type_car-selector').val();
+    $.ajax({
+      url: cars.ajaxurl,
+      type: "POST",
+      data: {
+        action: "filtrar_por_categoria",
+        'cars-brand-selector': selectedBrand,
+        'cars-fuel-selector': selectedFuel,
+        'cars-condition-selector': selectedCondition,
+        'cars-type_car-selector': selectedTypeCar,
+        'cars-state-selector': selectedState,
+        'cars-city-selector': selectedCity,
+      },
 
-  $.ajax({
-    url: cars.ajaxurl,
-    type: "POST",
-    data: {
-      action: "filtrar_por_categoria",
-      'cars-brand-selector': selectedBrand,
-      'cars-fuel-selector': selectedFuel,
-      'cars-condition-selector': selectedCondition,
-      'cars-type_car-selector': selectedTypeCar,
-    },
-    beforeSend: function () {
-      // Hide individual car listings and show a loading message in the listing-cars container
-      $("#listing-cars").html("Cargando");
-      $(".col-md-6").hide();
-    },
-    success: function (data) {
-      console.log(data);
-      let cars_grid_html = "";
-      if (Array.isArray(data) && data.length > 0) {
-        // Si data es un array con elementos, muestra los resultados
-        cars_grid_html += `<div class="row">`; // Inicia una nueva fila
-        data.forEach((element, index) => {
-          cars_grid_html += `
+      beforeSend: function () {
+        $("#listing-cars").html("Cargando");
+        $(".col-md-6").hide();
+      },
+      success: function (data) {
+        let cars_grid_html = "";
+        if (Array.isArray(data) && data.length > 0) {
+          
+          cars_grid_html += `<div class="row">`; 
+          data.forEach((element, index) => {
+            cars_grid_html += `
             <div class="col-md-6 col-sm-12">
               <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
                 <div class="listing-thumbnail">
@@ -509,23 +509,60 @@ $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-ty
                 </div>
               </div>
             </div>`;
-          if ((index + 1) % 2 === 0) {
-            cars_grid_html += `</div><div class="row">`; // Cierra la fila después de cada segundo carro
-          }
-        });
-        cars_grid_html += `</div>`; // Cierra la última fila
-      } else {
-        // Si data no tiene elementos, maneja el caso de no resultados
-        cars_grid_html = "No se encontraron resultados.";
-      }
+            if ((index + 1) % 2 === 0) {
+              cars_grid_html += `</div><div class="row">`; 
+            }
+          });
+          cars_grid_html += `</div>`; 
+        } else {
+          cars_grid_html = "No se encontraron resultados.";
+        }
 
-      // Inserta el HTML generado en el contenedor y show it
-      $("#listing-cars").html(cars_grid_html).show();
-    },
-    error: function (error) {
-      console.log(error);
-    },
+        $("#listing-cars").html(cars_grid_html).show();
+      },
+      error: function (error) {
+      },
+    });
+  }
+
+  $(document).ready(function () {
+    filtrarAutos();
+ 
   });
-});
+
+  $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-type_car-selector, #cars-state-selector, #cars-city-selector').change(function () {
+    filtrarAutos();
+  });
+
+  /* ------------------------------------------------------------
+    Muestra las ciudades correspondientes al estado seleccionado
+  --------------------------------------------------------------- */
+  $('select.estados-select').on('change', function () {
+
+    let estado = $(this).val();
+    
+    $.ajax({
+        url: cars.apiurl + 'location/' + estado, 
+        type: 'GET',
+        dataType: 'json',
+        success: (response) => {
+            if (response.ciudades) {
+                let ciudades = response.ciudades;
+                let $ciudadesSelect = $('select.ciudades-select');
+                $ciudadesSelect.niceSelect('destroy');
+                $ciudadesSelect.empty();
+                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option>');
+                ciudades.forEach(function (ciudad) {
+                    $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option>');
+                });
+                $ciudadesSelect.niceSelect();
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            console.log("Error:", textStatus, errorThrown);
+            console.log(cars.apiurl + 'location/' + estado); 
+        },
+    });
+  });
 
 })(window.jQuery);

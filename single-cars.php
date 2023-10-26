@@ -13,23 +13,23 @@ get_header();
 <?php
 while ( have_posts() ) :
 	the_post();
-	// Mostrar título y contenido del carro
-	// printf( '<pre>%s</pre>', var_export( get_post_custom( get_the_ID(  ) ), true ) );
+	// // Mostrar título y contenido del carro
+	//  printf( '<pre>%s</pre>', var_export( get_post_custom( get_the_ID(  ) ), true ) );
 
 	the_content();
 	get_template_part( 'template-parts/single-page/section', 'details' );
 
-	the_post_navigation(
-		array(
-			'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Previous:', 'multi-carros' ) . '</span> <span class="nav-title">%title</span>',
-			'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next:', 'multi-carros' ) . '</span> <span class="nav-title">%title</span>',
-		)
-	);
+// 	the_post_navigation(
+// 		array(
+// 			'prev_text' => '<span class="nav-subtitle">' . esc_html__( 'Previous:', 'multi-carros' ) . '</span> <span class="nav-title">%title</span>',
+// 			'next_text' => '<span class="nav-subtitle">' . esc_html__( 'Next:', 'multi-carros' ) . '</span> <span class="nav-title">%title</span>',
+// 		)
+// 	);
 
-	// Si los comentarios están abiertos o hay al menos un comentario, carga la plantilla de comentarios.
-	if ( comments_open() || get_comments_number() ) :
-		comments_template();
-endif;
+// 	// Si los comentarios están abiertos o hay al menos un comentario, carga la plantilla de comentarios.
+// 	if ( comments_open() || get_comments_number() ) :
+// 		comments_template();
+// endif;
 
 endwhile; // End of the loop.
 ?>

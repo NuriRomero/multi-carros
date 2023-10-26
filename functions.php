@@ -270,15 +270,20 @@ function submit_car_listing_handler() {
 	}
 }
 
-function load_jquery() {
-    wp_enqueue_script('jquery');
-}
-add_action('wp_enqueue_scripts', 'load_jquery');
+
 
 // Registra la acción para manejar el formulario
 add_action( 'admin_post_submit_car_listing', 'submit_car_listing_handler' );
 add_action( 'admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler' );
 
+function assign_custom_template() {
+	// Comprueba si es la página que deseas asignar la plantilla
+	if (is_page('compra-un-auto')) {
+		// Asigna la plantilla personalizada a la página
+		update_post_meta(get_the_ID(), '_wp_page_template', 'archive-cars.php');
+	}
+}
+add_action('template_redirect', 'assign_custom_template');
 /**
  * Enqueue scripts and styles.
  */
@@ -315,15 +320,19 @@ function multi_carros_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+	$variable = 'Hola Mundo';
 	wp_localize_script(
 		'main-fioxen',
 		'cars',
 		array(
 			'ajaxurl' => admin_url( 'admin-ajax.php' ),
+			'apiurl' =>  rest_url('multi-carros/v1/'), // Concatena "/location"
+		
 		)
 	);
 }
 add_action( 'wp_enqueue_scripts', 'multi_carros_scripts' );
+
 
 /**
  * Implement the Custom Header feature.
