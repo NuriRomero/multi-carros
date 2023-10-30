@@ -168,3 +168,29 @@ function filtrar_por_categoria() {
 
 add_action('wp_ajax_filtrar_por_categoria', 'filtrar_por_categoria');
 add_action('wp_ajax_nopriv_filtrar_por_categoria', 'filtrar_por_categoria');
+
+// Función para cargar más publicaciones
+function cargar_mas_publicaciones() {
+
+    $args = array(
+        'post_type' => 'cars',
+        'posts_per_page' => 6, 
+        'offset' => $_POST['offset'], 
+    );
+
+    $query = new WP_Query( $args );
+
+    if ( $query->have_posts() ) {
+        while ( $query->have_posts() ) {
+
+            $query->the_post();
+
+            get_template_part('template-parts/cars', 'grid');
+        }
+    }
+
+    wp_die(); 
+}
+
+add_action('wp_ajax_cargar_mas_publicaciones', 'cargar_mas_publicaciones');
+add_action('wp_ajax_nopriv_cargar_mas_publicaciones', 'cargar_mas_publicaciones');

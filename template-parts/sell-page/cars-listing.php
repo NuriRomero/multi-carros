@@ -34,7 +34,7 @@ if ( $cars->have_posts() ) :
 							if ( $image_url ) {
 								echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
 							} else {
-								echo 'No se ha proporcionado una imagen válida.';
+								
 							}
 							?>
 								<span class="featured-btn"></i>

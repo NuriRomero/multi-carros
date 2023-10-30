@@ -164,6 +164,10 @@ get_header();
                         endif;
                         ?>
                     </div>
+                    <div class="button text-center mt-30">
+                        <a href="#" class="main-btn icon-btn" id="cargar-mas-publicaciones">Cargar Más</a>
+                    </div>
+
                 </div>
             </div>
         </div>

@@ -502,7 +502,8 @@
                   <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
                   <div class="listing-meta">
                     <ul>
-                      <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                      <li><span><i class="ti-location-pin">${element.ciudad}</i>
+                                </span></li>
                       <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
                     </ul>
                   </div>
@@ -537,6 +538,7 @@
   /* ------------------------------------------------------------
     Muestra las ciudades correspondientes al estado seleccionado
   --------------------------------------------------------------- */
+
   $('select.estados-select').on('change', function () {
 
     let estado = $(this).val();
@@ -548,21 +550,57 @@
         success: (response) => {
             if (response.ciudades) {
                 let ciudades = response.ciudades;
+
                 let $ciudadesSelect = $('select.ciudades-select');
+                let existingCities = {}; 
+
                 $ciudadesSelect.niceSelect('destroy');
                 $ciudadesSelect.empty();
-                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option>');
+                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option');
+
                 ciudades.forEach(function (ciudad) {
-                    $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option>');
+                    
+                    if (!existingCities[ciudad]) {
+                        $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option');
+                        existingCities[ciudad] = true; 
+                    }
                 });
+                
                 $ciudadesSelect.niceSelect();
+                console.log(cars.apiurl + 'location/' + estado); 
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log("Error:", textStatus, errorThrown);
-            console.log(cars.apiurl + 'location/' + estado); 
         },
     });
   });
+
+/* ------------------------------------------------------------
+    Carga mas publicaciones al presionar el boton
+  --------------------------------------------------------------- */
+  jQuery(document).ready(function($) {
+      var offset = 6; // Cantidad de publicaciones ya mostradas
+
+      $('#cargar-mas-publicaciones').on('click', function(e) {
+          e.preventDefault();
+
+          $.ajax({
+              url: cars.ajaxurl, 
+              type: 'POST',
+              data: {
+                  action: 'cargar_mas_publicaciones',
+                  offset: offset
+              },
+              success: function(response) {
+                  if (response) {
+                      $('#listing-cars').append(response); 
+                      offset += 6; 
+                  }
+              }
+          });
+      });
+  });
+
 
 })(window.jQuery);

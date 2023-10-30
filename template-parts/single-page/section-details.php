@@ -46,8 +46,6 @@
                             $image_url = get_the_post_thumbnail_url( get_the_ID(), 'car_size_photo' );
                         if ( $image_url ) {
                             echo '<img src="' . esc_url( $image_url ) . '" href="' . esc_url( $image_url ) . '" class="img-fluid img-popup" alt="' . esc_attr( get_the_title() ) . '">';
-                        } else {
-                            echo 'No se ha proporcionado una imagen válida.';
                         }
                         ?>
                     </div>
@@ -64,9 +62,7 @@
                                         echo '</a>';
                                     }
                                 }
-                            } else {
-                                echo 'No se han proporcionado imágenes válidas.';
-                            }
+                            } 
 							?>
                         </div>
                     </div>
