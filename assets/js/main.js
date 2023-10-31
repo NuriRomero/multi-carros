@@ -547,34 +547,51 @@
   /* ------------------------------------------------------------
     Muestra las ciudades correspondientes al estado seleccionado
   --------------------------------------------------------------- */
-  $('select.estados-select').on('change', function () {
-
-    let estado = $(this).val();
-    
-    $.ajax({
-        url: cars.apiurl + 'location/' + estado, 
-        type: 'GET',
-        dataType: 'json',
-        success: (response) => {
+    $(document).ready(function () {
+      let ciudadesRegistradas = {};
+  
+      function cargarCiudades(estado) {
+        $.ajax({
+          url: cars.apiurl + 'location/' + estado,
+          type: 'GET',
+          dataType: 'json',
+          success: function (response) {
             if (response.ciudades) {
-                let ciudades = response.ciudades;
-                let $ciudadesSelect = $('select.ciudades-select');
-                $ciudadesSelect.niceSelect('destroy');
-                $ciudadesSelect.empty();
-                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option>');
-                ciudades.forEach(function (ciudad) {
-                    $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option>');
-                });
-                $ciudadesSelect.niceSelect();
+              let ciudades = response.ciudades;
+  
+              let $ciudadesSelect = $('select.ciudades-select');
+  
+              $ciudadesSelect.niceSelect('destroy');
+              $ciudadesSelect.empty();
+              $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option');
+  
+              ciudades.forEach(function (ciudad) {
+                if (!ciudadesRegistradas[ciudad]) {
+                  $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option>');
+  
+                  ciudadesRegistradas[ciudad] = true;
+                }
+              });
+  
+              $ciudadesSelect.niceSelect();
             }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.log("Error:", textStatus, errorThrown);
-            console.log(cars.apiurl + 'location/' + estado); 
-        },
+          },
+          error: function (jqXHR, textStatus, errorThrown) {
+            console.log('Error:', textStatus, errorThrown);
+          },
+        });
+      }
+  
+      $('select.estados-select').on('change', function () {
+        let estado = $(this).val();
+        
+        ciudadesRegistradas = {};
+  
+        cargarCiudades(estado);
+      });
     });
-  });
 
+  
   /* ------------------------------------------------------------
     Carga mas publicaciones al presionar el boton
   --------------------------------------------------------------- */
