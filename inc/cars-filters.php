@@ -43,6 +43,7 @@ add_action('wp_ajax_nopriv_filtrar_por_palabra_clave', 'filtrar_por_palabra_clav
 
 function filtrar_por_categoria() {
 
+    $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
     $selected_brand = isset($_POST['cars-brand-selector']) ? $_POST['cars-brand-selector'] : 'Todas las marcas';
     $selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
     $selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todas las condiciones';
@@ -134,12 +135,16 @@ function filtrar_por_categoria() {
     $metabox_query = new WP_Query($metabox_args);
 
     $metabox_post_ids = wp_list_pluck($metabox_query->posts, 'ID');
-
+     
+    $carsPerPage = 6;  // Number of cars to load per page.
+    $offset = ($page - 1) * $carsPerPage;
     // Combina los resultados de ambas consultas.
     $combined_query = new WP_Query(array(
         'post_type' => 'cars',
         'post__in' => $metabox_post_ids,
         'tax_query' => $tax_query,
+        'posts_per_page' => $carsPerPage,
+        'offset' => $offset,  
     ));
 
     $results = array();
@@ -171,20 +176,18 @@ add_action('wp_ajax_nopriv_filtrar_por_categoria', 'filtrar_por_categoria');
 
 // Función para cargar más publicaciones
 function cargar_mas_publicaciones() {
-
     $args = array(
         'post_type' => 'cars',
         'posts_per_page' => 6, 
         'offset' => $_POST['offset'], 
     );
 
-    $query = new WP_Query( $args );
+    $query = new WP_Query($args);
 
     if ( $query->have_posts() ) {
         while ( $query->have_posts() ) {
-
+            
             $query->the_post();
-
             get_template_part('template-parts/cars', 'grid');
         }
     }

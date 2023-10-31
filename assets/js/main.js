@@ -461,6 +461,7 @@
 
   function filtrarAutos() {
     // Obtiene los valores de los selectores de categorías
+    const currentPage = parseInt($('#listing-cars').data('page')) || 1;
     const selectedBrand = $('#cars-brand-selector').val();
     const selectedFuel = $('#cars-fuel-selector').val();
     const selectedCondition = $('#cars-condition-selector').val();
@@ -479,6 +480,8 @@
         'cars-type_car-selector': selectedTypeCar,
         'cars-state-selector': selectedState,
         'cars-city-selector': selectedCity,
+        'page': currentPage,  // Pass the current page number.
+        
       },
 
       beforeSend: function () {
@@ -502,8 +505,7 @@
                   <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
                   <div class="listing-meta">
                     <ul>
-                      <li><span><i class="ti-location-pin">${element.ciudad}</i>
-                                </span></li>
+                      <li><span><i class="ti-location-pin">${element.ciudad}</i></span></li>
                       <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
                     </ul>
                   </div>
@@ -515,6 +517,7 @@
             }
           });
           cars_grid_html += `</div>`; 
+
         } else {
           cars_grid_html = "No se encontraron resultados.";
         }
@@ -527,7 +530,13 @@
   }
 
   $(document).ready(function () {
+
     filtrarAutos();
+     // Load more button click handler.
+     $("#cargar-mas-publicaciones").click(function (e) {
+      e.preventDefault();
+      filtrarAutos();
+  });
  
   });
 
@@ -538,7 +547,6 @@
   /* ------------------------------------------------------------
     Muestra las ciudades correspondientes al estado seleccionado
   --------------------------------------------------------------- */
-
   $('select.estados-select').on('change', function () {
 
     let estado = $(this).val();
@@ -550,33 +558,24 @@
         success: (response) => {
             if (response.ciudades) {
                 let ciudades = response.ciudades;
-
                 let $ciudadesSelect = $('select.ciudades-select');
-                let existingCities = {}; 
-
                 $ciudadesSelect.niceSelect('destroy');
                 $ciudadesSelect.empty();
-                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option');
-
+                $ciudadesSelect.append('<option value="Mostrar Todas">Todas las ciudades</option>');
                 ciudades.forEach(function (ciudad) {
-                    
-                    if (!existingCities[ciudad]) {
-                        $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option');
-                        existingCities[ciudad] = true; 
-                    }
+                    $ciudadesSelect.append('<option value="' + ciudad + '">' + ciudad + '</option>');
                 });
-                
                 $ciudadesSelect.niceSelect();
-                console.log(cars.apiurl + 'location/' + estado); 
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             console.log("Error:", textStatus, errorThrown);
+            console.log(cars.apiurl + 'location/' + estado); 
         },
     });
   });
 
-/* ------------------------------------------------------------
+  /* ------------------------------------------------------------
     Carga mas publicaciones al presionar el boton
   --------------------------------------------------------------- */
   jQuery(document).ready(function($) {
@@ -601,6 +600,5 @@
           });
       });
   });
-
 
 })(window.jQuery);
