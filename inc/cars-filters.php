@@ -41,9 +41,9 @@ add_action('wp_ajax_filtrar_por_palabra_clave', 'filtrar_por_palabra_clave');
 add_action('wp_ajax_nopriv_filtrar_por_palabra_clave', 'filtrar_por_palabra_clave');
 
 
+
 function filtrar_por_categoria() {
 
-    $page = isset($_POST['page']) ? intval($_POST['page']) : 1;
     $selected_brand = isset($_POST['cars-brand-selector']) ? $_POST['cars-brand-selector'] : 'Todas las marcas';
     $selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
     $selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todas las condiciones';
@@ -60,6 +60,7 @@ function filtrar_por_categoria() {
         $selected_city,
     );
 
+    global $tax_query;
     $tax_query = array();
 
     $selected_categories_count = count(array_filter($selected_categories, function ($category) {
@@ -135,16 +136,12 @@ function filtrar_por_categoria() {
     $metabox_query = new WP_Query($metabox_args);
 
     $metabox_post_ids = wp_list_pluck($metabox_query->posts, 'ID');
-     
-    $carsPerPage = 6;  // Number of cars to load per page.
-    $offset = ($page - 1) * $carsPerPage;
+
     // Combina los resultados de ambas consultas.
     $combined_query = new WP_Query(array(
         'post_type' => 'cars',
         'post__in' => $metabox_post_ids,
         'tax_query' => $tax_query,
-        'posts_per_page' => $carsPerPage,
-        'offset' => $offset,  
     ));
 
     $results = array();
@@ -168,7 +165,7 @@ function filtrar_por_categoria() {
 
     wp_send_json($results);
 
-	die();
+    die();
 }
 
 add_action('wp_ajax_filtrar_por_categoria', 'filtrar_por_categoria');
@@ -178,22 +175,86 @@ add_action('wp_ajax_nopriv_filtrar_por_categoria', 'filtrar_por_categoria');
 function cargar_mas_publicaciones() {
     $args = array(
         'post_type' => 'cars',
-        'posts_per_page' => 6, 
-        'offset' => $_POST['offset'], 
+        'posts_per_page' => 6,
+        'offset' => $_POST['offset'],
     );
 
+    // Obtener los criterios de filtrado de la solicitud AJAX
+    $selected_brand = isset($_POST['cars-brand-selector']) ? $_POST['cars-brand-selector'] : 'Todas las marcas';
+    $selected_fuel = isset($_POST['cars-fuel-selector']) ? $_POST['cars-fuel-selector'] : 'Todos los tipos de combustible';
+    $selected_condition = isset($_POST['cars-condition-selector']) ? $_POST['cars-condition-selector'] : 'Todas las condiciones';
+    $selected_type_car = isset($_POST['cars-type_car-selector']) ? $_POST['cars-type_car-selector'] : 'Todos los tipos de auto';
+    $selected_state = isset($_POST['cars-state-selector']) ? $_POST['cars-state-selector'] : 'Todos los estados';
+    $selected_city = isset($_POST['cars-city-selector']) ? $_POST['cars-city-selector'] : 'Todas las ciudades';
+
+
+    // Construir una consulta personalizada basada en los criterios de filtrado
+    $tax_query = array();
+
+    if ($selected_brand !== 'Todas las marcas') {
+        $tax_query[] = array(
+            'taxonomy' => 'brand',
+            'field' => 'slug',
+            'terms' => $selected_brand,
+        );
+    }
+
+    if ($selected_fuel !== 'Todos los tipos de combustible') {
+        $tax_query[] = array(
+            'taxonomy' => 'fuel',
+            'field' => 'slug',
+            'terms' => $selected_fuel,
+        );
+    }
+
+    if ($selected_condition !== 'Todas las condiciones') {
+        $tax_query[] = array(
+            'taxonomy' => 'condition',
+            'field' => 'slug',
+            'terms' => $selected_condition,
+        );
+    }
+
+    if ($selected_type_car !== 'Todos los tipos de auto') {
+        $tax_query[] = array(
+            'taxonomy' => 'type_car',
+            'field' => 'slug',
+            'terms' => $selected_type_car,
+        );
+    }
+
+    if (!empty($tax_query)) {
+        $args['tax_query'] = $tax_query;
+    }
+    
+    if ($selected_state !== 'Mostrar Todas') {
+        $metabox_args['meta_query'][] = array(
+            'key' => 'administrative_area_level_1',
+            'value' => $selected_state,
+            'compare' => '='
+        );
+    }
+
+    if ($selected_city !== 'Mostrar Todas') {
+        $metabox_args['meta_query'][] = array(
+            'key' => 'locality',
+            'value' => $selected_city,
+            'compare' => '='
+        );
+    }
+    // Realizar la consulta utilizando los criterios de filtrado
     $query = new WP_Query($args);
 
-    if ( $query->have_posts() ) {
-        while ( $query->have_posts() ) {
-            
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
             $query->the_post();
             get_template_part('template-parts/cars', 'grid');
         }
     }
 
-    wp_die(); 
+    wp_die();
 }
 
 add_action('wp_ajax_cargar_mas_publicaciones', 'cargar_mas_publicaciones');
 add_action('wp_ajax_nopriv_cargar_mas_publicaciones', 'cargar_mas_publicaciones');
+
