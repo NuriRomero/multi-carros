@@ -9,7 +9,7 @@
 			} 
 			?>
             <span class="featured-btn">
-                <?php echo ! empty( $terms = wp_get_post_terms( get_the_ID(), 'condition' ) ) ? esc_html( $terms[0]->name ) : 'Condicion no especificada'; ?>
+                <?php echo  $terms = wp_get_post_terms( get_the_ID(), 'condition' ); ?>
             </span>
         </div>
         <div class="listing-content">
