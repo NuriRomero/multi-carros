@@ -277,11 +277,10 @@ add_action( 'admin_post_submit_car_listing', 'submit_car_listing_handler' );
 add_action( 'admin_post_nopriv_submit_car_listing', 'submit_car_listing_handler' );
 
 function assign_custom_template() {
-	// Comprueba si es la página que deseas asignar la plantilla
 	if (is_page('compra-un-auto')) {
-		// Asigna la plantilla personalizada a la página
 		update_post_meta(get_the_ID(), '_wp_page_template', 'archive-cars.php');
 	}
+	
 }
 add_action('template_redirect', 'assign_custom_template');
 /**
