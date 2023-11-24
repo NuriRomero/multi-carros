@@ -601,13 +601,44 @@
           });
       });
   });
+ /* ------------------------------------------------------------
+    Busqueda de autos desde front-page
+  --------------------------------------------------------------- */
+  $(document).ready(function () {
+    $('#buscar-button').on('click', function (event) {
+        event.preventDefault();
 
-  jQuery(document).ready(function ($) {
-    // Event handler for the "Buscar" button
-    $('#buscar-button').on('click', function (e) {
-        e.preventDefault();
+        const brand = $('#cars-brand-selector-front').val() || 'Mostrar Todas';
+        const fuel = $('#cars-fuel-selector').val() || 'Mostrar Todas';
+        const condition = $('#cars-condition-selector').val() || 'Mostrar Todas';
+        const typeCar = $('#cars-type_car-selector').val() || 'Mostrar Todas';
+        const state = $('#cars-state-selector').val() || 'Mostrar Todas';
+        const city = $('#cars-city-selector').val() || 'Mostrar Todas';
 
-        // Get selected values from the dropdowns
+        const queryString = `brand=${brand}&fuel=${fuel}&condition=${condition}&typeCar=${typeCar}&state=${state}&city=${city}`;
+
+        filterCars(queryString);
+
+        const redirectUrl = `${cars.siteUrl}/compra-un-auto/?${queryString}`;
+        window.location.replace(redirectUrl);
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const brand = urlParams.get('brand') || 'Mostrar Todas';
+    const fuel = urlParams.get('fuel') || 'Mostrar Todas';
+    const condition = urlParams.get('condition') || 'Mostrar Todas';
+    const typeCar = urlParams.get('typeCar') || 'Mostrar Todas';
+    const state = urlParams.get('state') || 'Mostrar Todas';
+    const city = urlParams.get('city') || 'Mostrar Todas';
+
+    $('#cars-brand-selector').val(brand);
+    $('#cars-fuel-selector').val(fuel);
+    $('#cars-condition-selector').val(condition);
+    $('#cars-type_car-selector').val(typeCar);
+    $('#cars-state-selector').val(state);
+    $('#cars-city-selector').val(city);
+
+    $('#cars-brand-selector, #cars-fuel-selector, #cars-condition-selector, #cars-type_car-selector, #cars-state-selector, #cars-city-selector').on('change', function () {
         const brand = $('#cars-brand-selector').val() || 'Mostrar Todas';
         const fuel = $('#cars-fuel-selector').val() || 'Mostrar Todas';
         const condition = $('#cars-condition-selector').val() || 'Mostrar Todas';
@@ -615,22 +646,28 @@
         const state = $('#cars-state-selector').val() || 'Mostrar Todas';
         const city = $('#cars-city-selector').val() || 'Mostrar Todas';
 
-        // Construct the URL with selected parameters
-        const redirectURL = `${window.location.origin}/compra-un-auto/?brand=${brand}&fuel=${fuel}&condition=${condition}&typeCar=${typeCar}&state=${state}&city=${city}`;
+        const queryString = `brand=${brand}&fuel=${fuel}&condition=${condition}&typeCar=${typeCar}&state=${state}&city=${city}`;
 
-        // Redirect to the "compra-un-auto" page with selected parameters
-        window.location.href = redirectURL;
+        filterCars(queryString);
     });
 });
 
-  // Función para filtrar y redirigir
-  function filtrarYRedirigir() {
-    const brand = $('#cars-brand-selector').val() || 'Mostrar Todas';
-    const fuel = $('#cars-fuel-selector').val() || 'Mostrar Todas';
-    const condition = $('#cars-condition-selector').val() || 'Mostrar Todas';
-    const typeCar = $('#cars-type_car-selector').val() || 'Mostrar Todas';
-    const state = $('#cars-state-selector').val() || 'Mostrar Todas';
-    const city = $('#cars-city-selector').val() || 'Mostrar Todas';
+document.addEventListener('DOMContentLoaded', function () {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const brand = urlParams.get('brand') || 'Mostrar Todas';
+    const fuel = urlParams.get('fuel') || 'Mostrar Todas';
+    const condition = urlParams.get('condition') || 'Mostrar Todas';
+    const typeCar = urlParams.get('typeCar') || 'Mostrar Todas';
+    const state = urlParams.get('state') || 'Mostrar Todas';
+    const city = urlParams.get('city') || 'Mostrar Todas';
+
+    $('#cars-brand-selector').val(brand);
+    $('#cars-fuel-selector').val(fuel);
+    $('#cars-condition-selector').val(condition);
+    $('#cars-type_car-selector').val(typeCar);
+    $('#cars-state-selector').val(state);
+    $('#cars-city-selector').val(city);
 
     const data = {
         'cars-brand-selector': brand,
@@ -641,32 +678,55 @@
         'cars-city-selector': city,
     };
 
-    // Almacena los parámetros de búsqueda en sessionStorage
-    sessionStorage.setItem('searchParams', JSON.stringify(data));
+    filterCars($.param(data));
+});
 
-    // Redirecciona a la página "compra-un-auto"
-    window.location.href = cars.apiurl + 'compra-un-auto';
-  }
+function filterCars(queryString) {
+    $.ajax({
+        url: cars.apiurl + 'filtrar_por_categorias',
+        type: 'POST',
+        data: queryString,
+        dataType: 'json',
+     
+        success: function (response) {
+            console.log(response);
+            let cars_grid_html = "";
+            if (Array.isArray(response) && response.length > 0) {
+                cars_grid_html += `<div class="row">`;
+                response.forEach((element, index) => {
+                    cars_grid_html += `
+                    <div class="col-md-6 col-sm-12">
+                        <div class="listing-item listing-grid-item-two mb-30 wow fadeInUp">
+                            <div class="listing-thumbnail">
+                                <img src="${element.post_thumbnail_url}" alt="Car Image"></img>
+                                <span class="featured-btn">${element.estado}</span>
+                            </div>
+                            <div class="listing-content">
+                                <h3 class="title"><a href="${element.permalink}">${element.title}</a></h3>
+                                <div class="listing-meta">
+                                    <ul>
+                                        <li><span><i class="ti-location-pin"></i>${element.ciudad}</span></li>
+                                        <li style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">Precio: ${element.precio}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                    if ((index + 1) % 2 === 0) {
+                        cars_grid_html += `</div><div class="row">`;
+                    }
+                });
+                cars_grid_html += `</div>`;
+            } else {
+                cars_grid_html = "No se encontraron resultados.";
+            }
+            $("#listing-cars").html(cars_grid_html).show();
 
-  // Asociar el evento de clic al botón de búsqueda
-  $('#hero-search-form button').on('click', function (e) {
-    e.preventDefault(); // Evitar el envío del formulario por defecto
-    filtrarYRedirigir();
-  });
-
-  // Ejecutar la función al cargar la página
-  $(document).ready(function () {
-    // Recupera los parámetros de búsqueda de sessionStorage al cargar la página
-    const savedSearchParams = sessionStorage.getItem('searchParams');
-    if (savedSearchParams) {
-        const parsedSearchParams = JSON.parse(savedSearchParams);
-        // Lógica para aplicar los parámetros de búsqueda a tus selectores si es necesario
-        // ...
-
-        // O simplemente redirecciona
-        // window.location.href = cars.apiurl + 'compra-un-auto';
-    }
-  });
-
+        },
+        error: function (error) {
+            console.log("Error:", error);
+        },
+    });
+}
 
 })(window.jQuery);
