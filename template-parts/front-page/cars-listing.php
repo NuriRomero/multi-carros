@@ -12,10 +12,10 @@ $cars = get_cars( 10 );
 if ( $cars->have_posts() ) :
 	?>
 <!--====== Start Listing Section POST======-->
-<section class="listing-grid-area pt-75 pb-110">
+<section class="listing-grid-area pt-35 pb-110">
 	<div class="container">
 		<div class="row justify-content-center">
-			<div class="col-lg-8">
+			<div class="col-lg-10">
 				<div class="section-title text-center mb-60 wow fadeInUp">
 					<h2>Agregados Recientemente</h2>
 				</div>
@@ -26,7 +26,7 @@ if ( $cars->have_posts() ) :
 			while ( $cars->have_posts() ) :
 				$cars->the_post();
 				?>
-			<div class="col-lg-4 col-md-6 col-sm-12">
+			<div class="col-lg-8 col-md-8 col-sm-12">
 				<div class="listing-item listing-grid-item-two">
 					<div class="listing-thumbnail">
 						<?php the_post_thumbnail('car_size_photo');?>

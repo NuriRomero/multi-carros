@@ -280,6 +280,9 @@ function assign_custom_template() {
 	if (is_page('compra-un-auto')) {
 		update_post_meta(get_the_ID(), '_wp_page_template', 'archive-cars.php');
 	}
+	if (is_page('preguntas-frecuentes')) {
+		update_post_meta(get_the_ID(), '_wp_page_template', 'page-2.php');
+	}
 	
 }
 add_action('template_redirect', 'assign_custom_template');

@@ -81,8 +81,6 @@
                             <div class="col-lg-4 col-5">
                                 <div class="header-right-nav">
                                     <ul class="d-flex align-items-center">
-                                        <li class="user-btn"><a href="index.html" class="icon"><i
-                                                    class="flaticon-avatar"></i></a></li>
                                         <li class="hero-nav-btn"><a href="vender-auto"
                                                 class="main-btn icon-btn">Publicar un Auto</a></li>
                                         <li class="nav-toggle-btn">

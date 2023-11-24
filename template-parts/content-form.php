@@ -50,7 +50,7 @@
 					<div class="page-title">
 						<h1 class="title">Publicar un Auto</h1>
 						<ul class="breadcrumbs-link">
-							<li><a href="index.html">Inicio</a></li>
+							<li><a href="mul">Inicio</a></li>
 							<li class="active">Listar</li>
 						</ul>
 					</div>

@@ -66,11 +66,52 @@
 							?>
                         </div>
                     </div>
-
                     <div class="listing-content mb-30 wow fadeInUp">
-                        <h3 class="title">Descripcion</h3>
-                        <p> <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_descripcion', true ); ?>
-                        </p>
+                        <div class="description-wrapper mb-45">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="description-tabs">
+                                        <ul class="nav nav-tabs">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab"
+                                                    href="#description">Descripcion</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#reviews">Preguntas
+                                                    Frecuentes</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="tab-content mt-30">
+                                        <div id="description" class="tab-pane fade show active">
+                                            <div class="descripcion-content-box">
+                                                <p> <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_descripcion', true ); ?>
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div id="reviews" class="tab-pane fade">
+                                            <div class="products-review-wrapper mb-25">
+                                                <div class="products-review-area mb-45">
+                                                    <h4 class="title">Preguntas Frecuentes</h4>
+                                                    <ul class="review-list">
+                                                        <li class="review">
+                                                            <div class="review-content">
+                                                                <h4>Pregunta:
+                                                                    <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_pregunta', true ); ?>
+                                                                </h4>
+                                                                <p>Respuesta:
+                                                                    <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_respuesta', true ); ?>
+                                                                </p>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-4 col-md-6 col-sm-12">
                                 <div class="icon-box icon-box-one">
@@ -172,6 +213,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="listing-tag-box mb-30 wow fadeInUp">
                         <h4 class="title">Amenidades</h4>
                         <?php
@@ -223,12 +265,14 @@
                                     <h3 class="title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
                                     <div class="listing-meta">
                                         <ul>
-                                        <li><span><i class="ti-location-pin"></i><?php echo "Ciudad: ". get_post_meta( get_the_ID(), 'administrative_area_level_1', true );?></span></li>
-                                        <span class="price"
-                                            style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
-                                            Precio:
-                                            <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_precio', true ); ?>
-                                        </span>
+                                            <li><span><i
+                                                        class="ti-location-pin"></i><?php echo "Ciudad: ". get_post_meta( get_the_ID(), 'administrative_area_level_1', true );?></span>
+                                            </li>
+                                            <span class="price"
+                                                style="display: block;font-weight: 600;color: #0d0d0d;margin-bottom: 15px;">
+                                                Precio:
+                                                <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_precio', true ); ?>
+                                            </span>
                                         </ul>
                                     </div>
                                 </div>

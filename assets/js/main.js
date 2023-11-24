@@ -602,4 +602,71 @@
       });
   });
 
+  jQuery(document).ready(function ($) {
+    // Event handler for the "Buscar" button
+    $('#buscar-button').on('click', function (e) {
+        e.preventDefault();
+
+        // Get selected values from the dropdowns
+        const brand = $('#cars-brand-selector').val() || 'Mostrar Todas';
+        const fuel = $('#cars-fuel-selector').val() || 'Mostrar Todas';
+        const condition = $('#cars-condition-selector').val() || 'Mostrar Todas';
+        const typeCar = $('#cars-type_car-selector').val() || 'Mostrar Todas';
+        const state = $('#cars-state-selector').val() || 'Mostrar Todas';
+        const city = $('#cars-city-selector').val() || 'Mostrar Todas';
+
+        // Construct the URL with selected parameters
+        const redirectURL = `${window.location.origin}/compra-un-auto/?brand=${brand}&fuel=${fuel}&condition=${condition}&typeCar=${typeCar}&state=${state}&city=${city}`;
+
+        // Redirect to the "compra-un-auto" page with selected parameters
+        window.location.href = redirectURL;
+    });
+});
+
+  // Función para filtrar y redirigir
+  function filtrarYRedirigir() {
+    const brand = $('#cars-brand-selector').val() || 'Mostrar Todas';
+    const fuel = $('#cars-fuel-selector').val() || 'Mostrar Todas';
+    const condition = $('#cars-condition-selector').val() || 'Mostrar Todas';
+    const typeCar = $('#cars-type_car-selector').val() || 'Mostrar Todas';
+    const state = $('#cars-state-selector').val() || 'Mostrar Todas';
+    const city = $('#cars-city-selector').val() || 'Mostrar Todas';
+
+    const data = {
+        'cars-brand-selector': brand,
+        'cars-fuel-selector': fuel,
+        'cars-condition-selector': condition,
+        'cars-type_car-selector': typeCar,
+        'cars-state-selector': state,
+        'cars-city-selector': city,
+    };
+
+    // Almacena los parámetros de búsqueda en sessionStorage
+    sessionStorage.setItem('searchParams', JSON.stringify(data));
+
+    // Redirecciona a la página "compra-un-auto"
+    window.location.href = cars.apiurl + 'compra-un-auto';
+  }
+
+  // Asociar el evento de clic al botón de búsqueda
+  $('#hero-search-form button').on('click', function (e) {
+    e.preventDefault(); // Evitar el envío del formulario por defecto
+    filtrarYRedirigir();
+  });
+
+  // Ejecutar la función al cargar la página
+  $(document).ready(function () {
+    // Recupera los parámetros de búsqueda de sessionStorage al cargar la página
+    const savedSearchParams = sessionStorage.getItem('searchParams');
+    if (savedSearchParams) {
+        const parsedSearchParams = JSON.parse(savedSearchParams);
+        // Lógica para aplicar los parámetros de búsqueda a tus selectores si es necesario
+        // ...
+
+        // O simplemente redirecciona
+        // window.location.href = cars.apiurl + 'compra-un-auto';
+    }
+  });
+
+
 })(window.jQuery);
