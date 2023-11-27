@@ -76,138 +76,26 @@
                                                 <a class="nav-link active" data-toggle="tab"
                                                     href="#description">Descripcion</a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" data-toggle="tab" href="#reviews">Preguntas
-                                                    Frecuentes</a>
-                                            </li>
                                         </ul>
                                     </div>
                                     <div class="tab-content mt-30">
                                         <div id="description" class="tab-pane fade show active">
                                             <div class="descripcion-content-box">
                                                 <p> <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_descripcion', true ); ?>
-                                                </p>
+                                                <h5>Detalles del vehiculo</h5>
+                                                <ul>
+                                                    <li><strong>Color:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_color', true); ?></li>
+                                                    <li><strong>Precio:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_precio', true); ?></li>
+                                                    <li><strong>Kilometraje:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_kilometraje', true); ?></li>
+                                                    <li><strong>Num. Pasajeros:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_pasajeros', true); ?></li>
+                                                    <li><strong>Num. Puertas:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_puertas', true); ?></li>
+                                                    <li><strong>Consumo de combustible (km/l):</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_consumo_combustible', true); ?></li>
+                                                    <li><strong>Tipo de transmisión:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_transmision', true); ?></li>
+                                                    <li><strong>Num. Bolsas de aire:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_bolsas', true); ?></li>
+                                                    <li><strong>Tipo de tracción:</strong> <?php echo get_post_meta(get_the_ID(), 'main_information_metabox_traccion', true); ?></li>
+                                                </ul>
                                             </div>
                                         </div>
-                                        <div id="reviews" class="tab-pane fade">
-                                            <div class="products-review-wrapper mb-25">
-                                                <div class="products-review-area mb-45">
-                                                    <h4 class="title">Preguntas Frecuentes</h4>
-                                                    <ul class="review-list">
-                                                        <li class="review">
-                                                            <div class="review-content">
-                                                                <h4>Pregunta:
-                                                                    <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_pregunta', true ); ?>
-                                                                </h4>
-                                                                <p>Respuesta:
-                                                                    <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_respuesta', true ); ?>
-                                                                </p>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-credit-card"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Numero de bolsas de Aire:
-                                            <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_bolsas', true ); ?>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-paint-bucket"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Kilometraje:
-                                            <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_kilometraje', true ); ?>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-rss-alt"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Transmision:
-                                            <?php
-												// Obtener el valor del campo personalizado 'Modelo'
-												echo get_post_meta( get_the_ID(), 'main_information_metabox_transmision', true );
-
-												?>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-trash"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Tipo de Auto
-                                            <?php
-                                            $post_id = get_the_ID();
-                                            $terms = wp_get_post_terms( $post_id, 'type_car' );
-                                            if ( ! empty( $terms ) ) {
-
-                                                foreach ( $terms as $term ) {
-                                                    echo esc_html( $term->name );
-                                                }
-                                            } else {
-                                                echo 'Combustible no especificado';
-                                            }
-											?>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-car"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Combustible:
-                                            <?php
-                                            $post_id = get_the_ID();
-                                            $terms   = wp_get_post_terms( $post_id, 'fuel' );
-                                            if ( ! empty( $terms ) ) {
-
-                                                foreach ( $terms as $term ) {
-                                                    echo esc_html( $term->name );
-                                                }
-                                            } else {
-                                                echo 'Combustible no especificado';
-                                            }
-                                            ?>
-                                        </h6>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-12">
-                                <div class="icon-box icon-box-one">
-                                    <div class="icon">
-                                        <i class="ti-credit-card"></i>
-                                    </div>
-                                    <div class="info">
-                                        <h6>Num.Puertas:
-                                            <?php echo get_post_meta( get_the_ID(), 'main_information_metabox_puertas', true ); ?>
-                                        </h6>
                                     </div>
                                 </div>
                             </div>
@@ -228,11 +116,36 @@
                         }
                         ?>
                     </div>
+                       <div class="listing-review-box mb-50 wow fadeInUp">
+                           <h4 class="title">Preguntas frecuentes</h4>
+                                <?php
+                                $faq_page_id = get_page_by_path('preguntas-frecuentes');
+                                $faq_group = get_post_meta($faq_page_id->ID, 'main_information_metabox_faq_group', true);
 
-                </div>
-                <div class="releted-listing-area wow fadeInUp">
-                    <h3 class="title mb-20">Autos similares</h3>
-                    <div class="releted-listing-slider-one">
+
+                                    echo '<ul class="review-list">';
+
+                                    foreach ( $faq_group as $group ) {
+
+                                        echo '<li class="review">';
+                                        echo '<div class="review-content">';
+                                        echo '<h5>' . esc_html($group['main_information_metabox_question']) . '</h5>';
+                                        echo '<span class="date"></span>';
+                                        echo '<p>' . esc_html($group['main_information_metabox_answer']) . '</p>';
+                                        echo '<div class="content-meta d-flex align-items-center justify-content-between">';
+                                        echo '</div>';
+                                        echo '</div>';
+                                        echo '</li>';
+                                    }
+
+                                    echo '</ul>';
+
+                                ?>
+                            </div>
+                        </div>
+                    <div class="releted-listing-area wow fadeInUp">
+                     <h3 class="title mb-20">Autos similares</h3>
+                        <div class="releted-listing-slider-one">
                         <?php
                         $terms = wp_get_post_terms( get_the_ID(), 'type_car' );
                         if ( ! empty( $terms ) ) {

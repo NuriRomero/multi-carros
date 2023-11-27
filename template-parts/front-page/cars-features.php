@@ -72,7 +72,7 @@
 							<h2>Encuentra el auto perfecto en Multi Carros: la mejor opción para autos nuevos y usados</h2>
 						</div>
 						<p>Descubre vehículos de calidad en Multi Carros: tu destino para autos nuevos y usados.</p>
-					
+						
 						<div class="counter-area pt-120">
 							<div class="row">
 								<div class="col-lg-4 col-md-4 col-ms-12">
@@ -80,14 +80,14 @@
 										<div class="info">
 											<h4><span>Autos</span>Nuevos Registrados</h4>
 											<h3><span class="count"><?php echo obtener_numero_total_autos_nuevos(); ?></span> +</h3>
-
+											
 										</div>
 									</div>
 								</div>
 								<div class="col-lg-4 col-md-4 col-ms-12">
 									<div class="counter-item counter-item-one wow fadeInUp">
 										<div class="info">
-											<h4><span>Autos</span>Usados Registrados</h4>
+											<h4><span>Autos</span>Semi Nuevos Registrados</h4>
 											<h3><span class="count"><?php echo obtener_numero_total_autos_semi_nuevos(); ?></span> +</h3>
 										</div>
 									</div>
@@ -109,6 +109,52 @@
 	</div>
 </section>
 <!--====== End Download Section ======-->
+<br>
+<!--====== Start Testimonial Section ======-->
+<section class="testimonial-area bg_cover pt-110 pb-140"  style="background-color: red;">
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-lg-6">
+				<div class="section-title section-title-two section-title-white text-center mb-55 wow fadeInUp">
+					<h2><span>Preguntas</span> Frecuentes</h2>
+				</div>
+			</div>
+		</div>
+		<div class="row justify-content-center">
+			<div class="col-lg-8">
+				<div class="testimonial-wrapper-one text-center wow fadeInUp">
+					<div class="testimonial-review-area">
+						<div class="testimonial-content-slider-one">
+							<?php
+							$faq_page_id = get_page_by_path('preguntas-frecuentes');
+							$faq_group = get_post_meta($faq_page_id->ID, 'main_information_metabox_faq_group', true);
+
+							if ( $faq_group ) {
+
+								
+								foreach ( $faq_group as $group ) {
+									echo '<div class="testimonial-item">';
+									echo '<div class="testimonial-content">';	
+									echo '<h4>' . esc_html($group['main_information_metabox_question']) . '</h4>';
+									echo '<div class="author-info">';
+									echo '<div class="author-title">';
+									echo '<span class="position">'  . esc_html($group['main_information_metabox_answer']) . '</span>';
+									echo '</div>';
+									echo '</div>';
+									echo '</div>';
+									echo '</div>';
+								}
+							}
+
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!--====== End Testimonial Section ======-->
 
 
 
