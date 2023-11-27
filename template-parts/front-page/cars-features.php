@@ -135,9 +135,9 @@
 								foreach ( $faq_group as $group ) {
 									echo '<div class="testimonial-item">';
 									echo '<div class="testimonial-content">';	
-									echo '<h4>' . esc_html($group['main_information_metabox_question']) . '</h4>';
 									echo '<div class="author-info">';
 									echo '<div class="author-title">';
+									echo '<h4>' . esc_html($group['main_information_metabox_question']) . '</h4>';
 									echo '<span class="position">'  . esc_html($group['main_information_metabox_answer']) . '</span>';
 									echo '</div>';
 									echo '</div>';

@@ -105,7 +105,6 @@
                     <div class="listing-tag-box mb-30 wow fadeInUp">
                         <h4 class="title">Amenidades</h4>
                         <?php
-                        // Obtén los términos de la taxonomía 'amenidades' asociados a este auto
                         $amenidades = get_the_terms( get_the_ID(), 'amenidades' );
                         if ( ! empty( $amenidades ) && ! is_wp_error( $amenidades ) ) {
                             foreach ( $amenidades as $amenidad ) {
